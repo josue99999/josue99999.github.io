@@ -50,8 +50,6 @@ nav.s{background:rgba(250,246,240,.94);backdrop-filter:blur(16px);border-color:v
 .hero-grain{position:absolute;inset:-20%;pointer-events:none;z-index:2;opacity:0.035;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
 .hi{position:relative;z-index:10;max-width:580px;padding:0 2rem;text-align:center;}
 
-.hb{font-family:'Fragment Mono',monospace;font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--stone);margin-bottom:1.8rem;opacity:0;transform:translateY(10px);transition:opacity .6s ease,transform .6s ease;}
-
 .htw{font-family:'Fraunces',serif;font-weight:300;font-size:clamp(1.9rem,4.5vw,3.8rem);line-height:1.05;letter-spacing:-.03em;color:var(--ink);margin-bottom:1.6rem;opacity:0;transform:translateY(28px);transition:opacity .9s ease,transform .9s ease;min-height:1.15em;white-space:nowrap;overflow:visible;}
 
 .cur{display:inline-block;width:2px;height:.7em;background:var(--terra);animation:blink .9s infinite;vertical-align:baseline;margin-left:1px;border-radius:1px;}
@@ -61,16 +59,16 @@ nav.s{background:rgba(250,246,240,.94);backdrop-filter:blur(16px);border-color:v
 
 .ha{display:flex;gap:.65rem;justify-content:center;flex-wrap:wrap;opacity:0;transform:translateY(10px);transition:opacity .7s ease,transform .7s ease;}
 
-/* Liquid text buttons — no box, just text */
-.btn-p,.btn-s{display:inline-flex;align-items:center;background:none;border:none;padding:0;text-decoration:none;font-family:'Fragment Mono',monospace;font-size:.72rem;font-weight:400;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;position:relative;transition:color .25s;}
+/* Liquid text buttons */
+.btn-p,.btn-s{display:inline-flex;align-items:center;background:none;border:none;padding:0;text-decoration:none;font-family:'Fragment Mono',monospace;font-size:.72rem;font-weight:400;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;position:relative;transition:color .25s;min-width:7ch;}
 .btn-p{color:var(--terra);}
 .btn-s{color:var(--ink3);}
 .btn-p::after,.btn-s::after{content:'';position:absolute;bottom:-2px;left:0;width:100%;height:1px;background:currentColor;opacity:.3;transform:scaleX(0);transform-origin:left;transition:transform .3s cubic-bezier(.22,1,.36,1),opacity .3s;}
 .btn-p:hover::after,.btn-s:hover::after{transform:scaleX(1);opacity:.6;}
 .btn-s:hover{color:var(--terra);}
 
-/* SVG liquid filter applied via JS on hover */
-.liq-active{will-change:filter;}
+/* number scramble overlay — monospaced so layout doesn't shift */
+.btn-p,.btn-s{font-variant-numeric:tabular-nums;}
 
 .hs{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:0;animation:fadeup 1s 2.4s forwards;z-index:10;}
 @keyframes fadeup{to{opacity:.35}}
@@ -87,27 +85,62 @@ h2 em{font-style:italic;}
 .rv{opacity:0;transform:translateY(22px);transition:opacity .75s cubic-bezier(.22,1,.36,1),transform .75s cubic-bezier(.22,1,.36,1);}
 .rv.in{opacity:1;transform:none;}
 .d1{transition-delay:.12s;}.d2{transition-delay:.24s;}.d3{transition-delay:.36s;}.d4{transition-delay:.48s;}
-
-/* slide-in from left */
 .rvl{opacity:0;transform:translateX(-18px);transition:opacity .75s cubic-bezier(.22,1,.36,1),transform .75s cubic-bezier(.22,1,.36,1);}
 .rvl.in{opacity:1;transform:none;}
-
-/* scale in */
 .rvs{opacity:0;transform:scale(.97);transition:opacity .75s cubic-bezier(.22,1,.36,1),transform .75s cubic-bezier(.22,1,.36,1);}
 .rvs.in{opacity:1;transform:none;}
 
 /* ABOUT */
 #about{background:var(--paper);}
-.ag{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;}
+.ag{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;overflow:visible;}
 .ap{color:var(--ink2);font-size:.9rem;margin-bottom:.9rem;line-height:1.85;}
 .ap strong{color:var(--ink);font-weight:500;}
 .al{display:flex;gap:1.25rem;flex-wrap:wrap;margin-top:2rem;}
 .al a{color:var(--terra);text-decoration:none;font-family:'Fragment Mono',monospace;font-size:.68rem;letter-spacing:.04em;border-bottom:1px solid rgba(197,96,42,.22);padding-bottom:1px;transition:border-color .2s;}
 .al a:hover{border-color:var(--terra);}
 
-/* Number rain canvas container */
-.rain-wrap{position:relative;overflow:hidden;aspect-ratio:1/1.05;background:transparent;}
+/* Neural sphere clip — invisible wrapper that holds the clipping boundary */
+.rain-clip{
+  overflow:hidden;
+  aspect-ratio:1/1.05;
+  position:relative;
+  border-radius:4px;
+}
+
+/* Neural sphere — ZOOM ON HOVER */
+.rain-wrap{
+  position:relative;
+  overflow:visible;
+  aspect-ratio:1/1.05;
+  background:transparent;
+  transform-origin:center center;
+  transition:transform 0.9s cubic-bezier(.22,1,.36,1), filter 0.85s cubic-bezier(.22,1,.36,1);
+  cursor:crosshair;
+  z-index:1;
+}
 .rain-wrap canvas{display:block;width:100%;height:100%;}
+
+/* zoom into the brain */
+.rain-wrap:hover{
+  transform:scale(1.52);
+  z-index:20;
+  filter:drop-shadow(0 0 60px rgba(197,96,42,.22)) drop-shadow(0 0 20px rgba(197,96,42,.12));
+}
+
+/* brain ring glow — appears on hover */
+.rain-wrap::before{
+  content:'';
+  position:absolute;
+  inset:-1px;
+  border:1px solid rgba(197,96,42,0);
+  transition:border-color 0.9s, box-shadow 0.9s;
+  pointer-events:none;
+  z-index:5;
+}
+.rain-wrap:hover::before{
+  border-color:rgba(197,96,42,.18);
+  box-shadow:inset 0 0 40px rgba(197,96,42,.06);
+}
 
 /* EXPERIENCE */
 #experience{background:var(--cream2);}
@@ -168,7 +201,6 @@ h2 em{font-style:italic;}
 .cl2 svg{width:13px;height:13px;opacity:.5;}
 footer{border-top:1px solid var(--border);padding-top:2rem;color:var(--stone);font-family:'Fragment Mono',monospace;font-size:.6rem;letter-spacing:.04em;}
 
-/* Section divider line animation */
 .sec-line{width:0;height:1px;background:var(--terra);opacity:.25;margin-bottom:2rem;transition:width 1.2s cubic-bezier(.22,1,.36,1);}
 .sec-line.in{width:60px;}
 
@@ -177,7 +209,6 @@ footer{border-top:1px solid var(--border);padding-top:2rem;color:var(--stone);fo
 </head>
 <body>
 
-<!-- SVG liquid filter for buttons -->
 <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
   <defs>
     <filter id="liq" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
@@ -230,8 +261,10 @@ footer{border-top:1px solid var(--border);padding-top:2rem;color:var(--stone);fo
           <a href="https://huggingface.co/josabb" target="_blank">HuggingFace</a>
         </div>
       </div>
-      <div class="rain-wrap rvs d2">
-        <canvas id="rain"></canvas>
+      <div class="rain-clip rvs d2">
+        <div class="rain-wrap">
+          <canvas id="rain"></canvas>
+        </div>
       </div>
     </div>
   </div>
@@ -327,53 +360,38 @@ footer{border-top:1px solid var(--border);padding-top:2rem;color:var(--stone);fo
     <div class="sw">
       <div class="rv">
         <div class="sgt">Programming</div>
-        <div class="sps">
-          <span class="sp">Python</span><span class="sp">C/C++</span><span class="sp">R</span><span class="sp">MATLAB</span><span class="sp">Bash</span><span class="sp">CUDA</span>
-        </div>
+        <div class="sps"><span class="sp">Python</span><span class="sp">C/C++</span><span class="sp">R</span><span class="sp">MATLAB</span><span class="sp">Bash</span><span class="sp">CUDA</span></div>
       </div>
       <div class="rv d1">
         <div class="sgt">Robotics & Sim</div>
-        <div class="sps">
-          <span class="sp">ROS 2</span><span class="sp">Isaac Lab</span><span class="sp">MuJoCo</span><span class="sp">Gazebo</span><span class="sp">LeRobot</span><span class="sp">Unitree SDK</span><span class="sp">PyBullet</span><span class="sp">Drake</span>
-        </div>
+        <div class="sps"><span class="sp">ROS 2</span><span class="sp">Isaac Lab</span><span class="sp">MuJoCo</span><span class="sp">Gazebo</span><span class="sp">LeRobot</span><span class="sp">Unitree SDK</span><span class="sp">PyBullet</span><span class="sp">Drake</span></div>
       </div>
       <div class="rv d2">
         <div class="sgt">AI / ML / Vision</div>
-        <div class="sps">
-          <span class="sp">PyTorch</span><span class="sp">JAX</span><span class="sp">HuggingFace</span><span class="sp">RL (PPO / SAC)</span><span class="sp">Imitation Learning</span><span class="sp">VLA Models</span><span class="sp">ACT / Diffusion Policy</span><span class="sp">YOLOv8</span><span class="sp">OpenCV</span><span class="sp">SMPL-X</span><span class="sp">SLAM</span><span class="sp">Weights & Biases</span>
-        </div>
+        <div class="sps"><span class="sp">PyTorch</span><span class="sp">JAX</span><span class="sp">HuggingFace</span><span class="sp">RL (PPO / SAC)</span><span class="sp">Imitation Learning</span><span class="sp">VLA Models</span><span class="sp">ACT / Diffusion Policy</span><span class="sp">YOLOv8</span><span class="sp">OpenCV</span><span class="sp">SMPL-X</span><span class="sp">SLAM</span><span class="sp">Weights & Biases</span></div>
       </div>
       <div class="rv d3">
         <div class="sgt">Control Systems</div>
-        <div class="sps">
-          <span class="sp">Feedback Linearization</span><span class="sp">MPC</span><span class="sp">Sliding Mode</span><span class="sp">MRAC</span><span class="sp">PID</span><span class="sp">LQR</span><span class="sp">Impedance Control</span>
-        </div>
+        <div class="sps"><span class="sp">Feedback Linearization</span><span class="sp">MPC</span><span class="sp">Sliding Mode</span><span class="sp">MRAC</span><span class="sp">PID</span><span class="sp">LQR</span><span class="sp">Impedance Control</span></div>
       </div>
       <div class="rv">
         <div class="sgt">Infrastructure</div>
-        <div class="sps">
-          <span class="sp">Docker</span><span class="sp">Linux</span><span class="sp">Git</span><span class="sp">SSH</span><span class="sp">Slurm / HPC</span><span class="sp">NumPy / SciPy</span><span class="sp">Pandas</span>
-        </div>
+        <div class="sps"><span class="sp">Docker</span><span class="sp">Linux</span><span class="sp">Git</span><span class="sp">SSH</span><span class="sp">Slurm / HPC</span><span class="sp">NumPy / SciPy</span><span class="sp">Pandas</span></div>
       </div>
       <div class="rv d1">
         <div class="sgt">Industrial & CAD</div>
-        <div class="sps">
-          <span class="sp">Fusion 360</span><span class="sp">SolidWorks</span><span class="sp">TIA Portal</span><span class="sp">Codesys</span><span class="sp">LabVIEW</span><span class="sp">PLC</span><span class="sp">Figma</span><span class="sp">Power BI</span>
-        </div>
+        <div class="sps"><span class="sp">Fusion 360</span><span class="sp">SolidWorks</span><span class="sp">TIA Portal</span><span class="sp">Codesys</span><span class="sp">LabVIEW</span><span class="sp">PLC</span><span class="sp">Figma</span><span class="sp">Power BI</span></div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- CONTACT — email removed, only links -->
 <section id="contact">
   <div class="container">
     <div class="ch rv">Open to what<br>comes <em>next.</em></div>
     <p class="cb rv">Research collaborations, PhD/Master's applications, and freelance robotics projects.</p>
     <div class="crow rv">
-      <a href="mailto:abadjosue25@gmail.com" class="cl2">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        abadjosue25@gmail.com
-      </a>
       <a href="https://github.com/josue99999" class="cl2" target="_blank">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
         GitHub
@@ -405,35 +423,86 @@ window.addEventListener('scroll', () => nav.classList.toggle('s', scrollY > 60),
   const turb = document.getElementById('liq-turb');
   const disp = document.getElementById('liq-disp');
   if (!turb || !disp) return;
-
   document.querySelectorAll('.btn-p, .btn-s').forEach(btn => {
     let raf, freq = 0, target = 0;
-
     function tick() {
       freq += (target - freq) * 0.12;
       const noisy = freq + Math.sin(Date.now() * 0.008) * freq * 0.35;
       turb.setAttribute('baseFrequency', `${noisy * 0.7} ${noisy}`);
       disp.setAttribute('scale', freq * 18);
-      if (Math.abs(freq - target) > 0.0005 || target > 0) {
-        raf = requestAnimationFrame(tick);
-      } else {
-        cancelAnimationFrame(raf);
-        btn.style.filter = '';
+      if (Math.abs(freq - target) > 0.0005 || target > 0) raf = requestAnimationFrame(tick);
+      else { cancelAnimationFrame(raf); btn.style.filter = ''; }
+    }
+    btn.addEventListener('mouseenter', () => { target = 1; btn.style.filter = 'url(#liq)'; cancelAnimationFrame(raf); raf = requestAnimationFrame(tick); });
+    btn.addEventListener('mouseleave', () => { target = 0; raf = requestAnimationFrame(tick); });
+  });
+})();
+
+/* ── BUTTON NUMBER SCRAMBLE ── */
+(()=>{
+  function attachScramble(btn) {
+    const original = btn.textContent.trim();
+    let rafId = null;
+    let timerId = null;
+    let mode = 'idle'; // 'to-numbers' | 'numbers' | 'to-text' | 'idle'
+    let step = 0;
+    const STEPS = 14;
+
+    function rndBit() { return Math.random() < 0.5 ? '0' : '1'; }
+
+    function renderMix(progressToNumbers) {
+      // progressToNumbers 0→1: chars become numbers; 1→0: numbers become chars
+      return original.split('').map((c) => {
+        if (c === ' ') return '\u00a0'; // non-breaking space to maintain width
+        const roll = Math.random();
+        return roll < progressToNumbers ? rndBit() : c;
+      }).join('');
+    }
+
+    function loop() {
+      if (mode === 'to-numbers') {
+        step = Math.min(step + 1, STEPS);
+        btn.textContent = renderMix(step / STEPS);
+        if (step < STEPS) { rafId = requestAnimationFrame(loop); }
+        else { mode = 'numbers'; flickerLoop(); }
+      } else if (mode === 'to-text') {
+        step = Math.max(step - 1, 0);
+        btn.textContent = renderMix(step / STEPS);
+        if (step > 0) { rafId = requestAnimationFrame(loop); }
+        else { mode = 'idle'; btn.textContent = original; }
       }
     }
 
+    function flickerLoop() {
+      if (mode !== 'numbers') return;
+      btn.textContent = renderMix(1);
+      timerId = setTimeout(() => { rafId = requestAnimationFrame(flickerLoop); }, 80);
+    }
+
     btn.addEventListener('mouseenter', () => {
-      target = 1;
-      btn.style.filter = 'url(#liq)';
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(tick);
+      clearTimeout(timerId); cancelAnimationFrame(rafId);
+      if (mode === 'idle' || mode === 'to-text') {
+        mode = 'to-numbers';
+        if (mode !== 'to-numbers') step = 0;
+        else if (btn.textContent === original) step = 0;
+      }
+      mode = 'to-numbers';
+      if (btn.textContent === original) step = 0;
+      rafId = requestAnimationFrame(loop);
     });
 
     btn.addEventListener('mouseleave', () => {
-      target = 0;
-      raf = requestAnimationFrame(tick);
+      clearTimeout(timerId); cancelAnimationFrame(rafId);
+      mode = 'to-text';
+      // step stays at current value so it reverses from where it was
+      rafId = requestAnimationFrame(loop);
     });
-  });
+  }
+
+  // Apply after hero reveal
+  setTimeout(() => {
+    document.querySelectorAll('.btn-p, .btn-s').forEach(attachScramble);
+  }, 900);
 })();
 
 /* ── TYPEWRITER ── */
@@ -455,22 +524,19 @@ window.addEventListener('scroll', () => nav.classList.toggle('s', scrollY > 60),
   setTimeout(tick, 700);
 })();
 
-/* ── INTERSECTION OBSERVER — all animation classes ── */
+/* ── INTERSECTION OBSERVER ── */
 const io = new IntersectionObserver(es=>{
-  es.forEach(e=>{
-    if(e.isIntersecting){
-      e.target.classList.add('in');
-    }
-  });
+  es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
 },{threshold:.08});
 document.querySelectorAll('.rv, .rvl, .rvs, .sec-line').forEach(el=>io.observe(el));
 
-/* ── ABOUT CANVAS — 3D Neural Sphere (robotics × ML × physical) ── */
+/* ── ABOUT CANVAS — Neural Sphere with Brain Zoom ── */
 (()=>{
   const canvas = document.getElementById('rain');
   if (!canvas) return;
   const wrap = canvas.parentElement;
   const DPR = Math.min(window.devicePixelRatio, 2);
+
   function resize() {
     canvas.width  = wrap.clientWidth  * DPR;
     canvas.height = wrap.clientHeight * DPR;
@@ -482,7 +548,6 @@ document.querySelectorAll('.rv, .rvl, .rvs, .sec-line').forEach(el=>io.observe(e
   const W = () => canvas.width, H = () => canvas.height;
   const INK=[43,33,25], STONE=[139,126,116], TERRA=[197,96,42];
 
-  // Fibonacci sphere distribution
   const PHI = (1 + Math.sqrt(5)) / 2;
   const N_OUTER=52, N_MID=20, N_INNER=10;
   const nodes=[];
@@ -509,8 +574,7 @@ document.querySelectorAll('.rv, .rvl, .rvs, .sec-line').forEach(el=>io.observe(e
   const edges=[];
   for (let i=0;i<N_OUTER;i++)
     for (let j=i+1;j<N_OUTER;j++)
-      if(D2(nodes[i],nodes[j])<0.28)
-        edges.push({a:i,b:j,type:'struct'});
+      if(D2(nodes[i],nodes[j])<0.28) edges.push({a:i,b:j,type:'struct'});
   for (let i=N_OUTER;i<N_OUTER+N_MID;i++){
     nodes.slice(0,N_OUTER).map((n,j)=>({j,d:D2(nodes[i],n)}))
       .sort((a,b)=>a.d-b.d).slice(0,2)
@@ -522,8 +586,16 @@ document.querySelectorAll('.rv, .rvl, .rvs, .sec-line').forEach(el=>io.observe(e
       .forEach(({j})=>edges.push({a:i,b:j,type:'signal',progress:Math.random(),speed:0.006+Math.random()*0.005}));
   }
 
-  let rotY=0, mx=0, my=0, tmx=0, tmy=0;
-  wrap.addEventListener('mousemove',ev=>{
+  /* ── Brain zoom state ── */
+  let brainHovered = false;
+  let brainZoomCurrent = 1.0;
+  let brainRotMult = 1.0;
+  let rotYRunning = 0;
+  let mx=0, my=0, tmx=0, tmy=0;
+
+  wrap.addEventListener('mouseenter', () => { brainHovered = true; });
+  wrap.addEventListener('mouseleave', () => { brainHovered = false; });
+  wrap.addEventListener('mousemove', ev => {
     const r=wrap.getBoundingClientRect();
     tmx=((ev.clientX-r.left)/r.width-0.5)*0.55;
     tmy=((ev.clientY-r.top)/r.height-0.5)*0.3;
@@ -546,10 +618,23 @@ document.querySelectorAll('.rv, .rvl, .rvs, .sec-line').forEach(el=>io.observe(e
   let t=0;
   function draw(){
     t+=0.014;
+
+    // lerp brain zoom & rotation speed
+    const zoomTarget = brainHovered ? 1.82 : 1.0;
+    brainZoomCurrent += (zoomTarget - brainZoomCurrent) * 0.045;
+    const rotTarget = brainHovered ? 0.28 : 1.0;
+    brainRotMult += (rotTarget - brainRotMult) * 0.04;
+
     ctx.clearRect(0,0,W(),H());
     mx+=(tmx-mx)*0.035; my+=(tmy-my)*0.035;
-    rotY=t*0.14+mx;
-    const rx=0.22+my, sc=getSphereScale(t);
+
+    rotYRunning += 0.014 * brainRotMult;
+    const rotY = rotYRunning + mx;
+    const rx = 0.22 + my;
+    const sc = getSphereScale(t) * brainZoomCurrent;
+
+    // When zoomed in, boost signal speed
+    const sigBoost = brainHovered ? 2.2 : 1.0;
 
     const proj=nodes.map(n=>{
       const [a,b,c]=rotVec(n.bx*sc,n.by*sc,n.bz*sc,rotY,rx);
@@ -572,7 +657,7 @@ document.querySelectorAll('.rv, .rvl, .rvs, .sec-line').forEach(el=>io.observe(e
           g.addColorStop(1,`rgba(${cb[0]},${cb[1]},${cb[2]},${ea*0.8})`);
           ctx.beginPath(); ctx.moveTo(pa.sx,pa.sy); ctx.lineTo(pb.sx,pb.sy);
           ctx.strokeStyle=g; ctx.lineWidth=0.9*DPR; ctx.stroke();
-          e.progress=(e.progress+e.speed)%1;
+          e.progress=(e.progress+e.speed*sigBoost)%1;
           const px=pa.sx+(pb.sx-pa.sx)*e.progress, py=pa.sy+(pb.sy-pa.sy)*e.progress;
           const pS=pa.scale+(pb.scale-pa.scale)*e.progress, sr=2.8*Math.max(pS,0.4)*DPR;
           const grd=ctx.createRadialGradient(px,py,0,px,py,sr*2.5);
@@ -605,7 +690,7 @@ document.querySelectorAll('.rv, .rvl, .rvs, .sec-line').forEach(el=>io.observe(e
 })();
 </script>
 
-<!-- THREE.JS HERO PARTICLE FIELD -->
+<!-- THREE.JS HERO — FOUR TUNNEL PARTICLE STREAMS -->
 <script type="module">
 import * as THREE from 'three';
 
@@ -621,55 +706,69 @@ scene.fog = new THREE.FogExp2(0xFAF6F0, 0.012);
 const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.1, 300);
 camera.position.set(55, 16, 42);
 
-const COUNT = 1200;
-const positions = new Float32Array(COUNT * 3);
-const sizes = new Float32Array(COUNT);
-const digits = new Float32Array(COUNT);
-const startPos = new Float32Array(COUNT * 3);
-const waveX = new Float32Array(COUNT);
+// ── 4 tunnel streams + ambient particles ──
+const COUNT = 1400;
+const TUNNEL_COUNT = 4;
+const positions   = new Float32Array(COUNT * 3);
+const sizes       = new Float32Array(COUNT);
+const digits      = new Float32Array(COUNT);
+const startPos    = new Float32Array(COUNT * 3);
+const tunnelId    = new Uint8Array(COUNT);
+const waveP       = new Float32Array(COUNT); // base axis position per particle
+
+// Tunnel configs: [axisSpeed, spiralAmp, spiralFreq, spiralPhaseSpd, perp1Amp, perp2Amp]
+const TC = [
+  { sp: 7.2,  sa: 9.0, sf: 0.18, sps: 0.8,  p1a: 0.8, p2a: 0.7 }, // X-axis
+  { sp: 6.0,  sa: 8.5, sf: 0.16, sps: 0.7,  p1a: 0.8, p2a: 0.7 }, // Y-axis
+  { sp: 8.5,  sa: 9.5, sf: 0.20, sps: 0.9,  p1a: 0.7, p2a: 0.8 }, // Z-axis
+  { sp: 5.2,  sa: 8.0, sf: 0.15, sps: 0.75, p1a: 0.7, p2a: 0.7 }, // XY diagonal
+];
 
 for (let i = 0; i < COUNT; i++) {
   const ix = i * 3;
-  startPos[ix] = (Math.random() - 0.5) * 80;
-  startPos[ix + 1] = (Math.random() - 0.5) * 80;
-  startPos[ix + 2] = (Math.random() - 0.5) * 80;
-  positions[ix] = startPos[ix];
-  positions[ix + 1] = startPos[ix + 1];
-  positions[ix + 2] = startPos[ix + 2];
-  sizes[i] = 2.4 + Math.random() * 1.1;
+  tunnelId[i] = i % TUNNEL_COUNT;
+  const seg = Math.floor(i / TUNNEL_COUNT);
+  waveP[i] = -50 + (seg / (COUNT / TUNNEL_COUNT - 1)) * 100 + (Math.random() - 0.5) * 2.5;
+
+  startPos[ix]   = (Math.random() - 0.5) * 80;
+  startPos[ix+1] = (Math.random() - 0.5) * 80;
+  startPos[ix+2] = (Math.random() - 0.5) * 80;
+  positions[ix]   = startPos[ix];
+  positions[ix+1] = startPos[ix+1];
+  positions[ix+2] = startPos[ix+2];
+  sizes[i]  = 2.4 + Math.random() * 1.1;
   digits[i] = Math.random() < 0.5 ? 0 : 1;
-  waveX[i] = -50 + (i / (COUNT - 1)) * 100 + (Math.random() - 0.5) * 1.5;
 }
 
 const geometry = new THREE.BufferGeometry();
 geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-geometry.setAttribute('digit', new THREE.BufferAttribute(digits, 1));
+geometry.setAttribute('size',     new THREE.BufferAttribute(sizes, 1));
+geometry.setAttribute('digit',    new THREE.BufferAttribute(digits, 1));
 
+// Build glyph atlas (0 and 1)
 const texCanvas = document.createElement('canvas');
-texCanvas.width = 256;
-texCanvas.height = 128;
-const ctx = texCanvas.getContext('2d');
-ctx.clearRect(0,0,256,128);
-ctx.fillStyle = '#ffffff';
-ctx.textAlign = 'center';
-ctx.textBaseline = 'middle';
-ctx.font = '84px "Fragment Mono", "Courier New", monospace';
-ctx.fillText('0', 64, 72);
-ctx.fillText('1', 192, 72);
+texCanvas.width = 256; texCanvas.height = 128;
+const ctx2d = texCanvas.getContext('2d');
+ctx2d.clearRect(0,0,256,128);
+ctx2d.fillStyle = '#ffffff';
+ctx2d.textAlign = 'center';
+ctx2d.textBaseline = 'middle';
+ctx2d.font = '84px "Fragment Mono", "Courier New", monospace';
+ctx2d.fillText('0', 64, 72);
+ctx2d.fillText('1', 192, 72);
 const atlas = new THREE.CanvasTexture(texCanvas);
 atlas.minFilter = THREE.LinearFilter;
 atlas.magFilter = THREE.LinearFilter;
 atlas.generateMipmaps = false;
 
 const uniforms = {
-  map: { value: atlas },
-  fogColor: { value: new THREE.Color(0xFAF6F0) },
+  map:        { value: atlas },
+  fogColor:   { value: new THREE.Color(0xFAF6F0) },
   fogDensity: { value: 0.012 },
-  baseInk: { value: new THREE.Color(0x2B2119) },
-  stone: { value: new THREE.Color(0x8B7E74) },
-  terra: { value: new THREE.Color(0xC5602A) },
-  isWave: { value: 0.0 }
+  baseInk:    { value: new THREE.Color(0x2B2119) },
+  stone:      { value: new THREE.Color(0x8B7E74) },
+  terra:      { value: new THREE.Color(0xC5602A) },
+  isWave:     { value: 0.0 }
 };
 
 const vertexShader = `
@@ -707,10 +806,15 @@ const fragmentShader = `
     float depthT = smoothstep(25.0, 85.0, vFogDepth);
     vec3 col = mix(baseInk, stone, depthT * 0.85);
     if (isWave > 0.001) {
+      // Color each tunnel differently at the "hot" cross-section
       float radial = length(vWorldPos.yz);
-      float centerX = 1.0 - smoothstep(0.0, 18.0, abs(vWorldPos.x));
-      float terraMask = (1.0 - smoothstep(0.0, 5.0, radial)) * centerX;
-      col = mix(col, terra, terraMask * isWave * 0.88);
+      float radial2 = length(vWorldPos.xz);
+      float radial3 = length(vWorldPos.xy);
+      float hot1 = (1.0 - smoothstep(0.0, 7.0, radial))  * (1.0 - smoothstep(0.0, 12.0, abs(vWorldPos.x)));
+      float hot2 = (1.0 - smoothstep(0.0, 7.0, radial2)) * (1.0 - smoothstep(0.0, 12.0, abs(vWorldPos.y)));
+      float hot3 = (1.0 - smoothstep(0.0, 7.0, radial3)) * (1.0 - smoothstep(0.0, 12.0, abs(vWorldPos.z)));
+      float terraMask = max(max(hot1, hot2), hot3);
+      col = mix(col, terra, terraMask * isWave * 0.9);
     }
     float alpha = tex.a;
     float depthAlpha = 1.0 - smoothstep(30.0, 110.0, vFogDepth) * 0.55;
@@ -739,79 +843,114 @@ scene.add(new THREE.AmbientLight(0xffffff, 0.9));
 
 const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
 window.addEventListener('pointermove', (e) => {
-  mouse.tx = (e.clientX / window.innerWidth - 0.5) * 2;
+  mouse.tx = (e.clientX / window.innerWidth  - 0.5) * 2;
   mouse.ty = (e.clientY / window.innerHeight - 0.5) * 2;
 }, { passive: true });
 
 const CYCLE = 23.0;
 const T_INIT = 8.0;
-const T_TR1 = 3.0;
+const T_TR1  = 3.0;
 const T_WAVE = 9.0;
-const T_TR2 = 3.0;
+const T_TR2  = 3.0;
 
 function easeInOutCubic(t) {
-  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3) / 2;
 }
-
 function newInits() {
   for (let i = 0; i < COUNT; i++) {
     const ix = i * 3;
-    startPos[ix] = (Math.random() - 0.5) * 84;
-    startPos[ix + 1] = (Math.random() - 0.5) * 84;
-    startPos[ix + 2] = (Math.random() - 0.5) * 84;
+    startPos[ix]   = (Math.random() - 0.5) * 84;
+    startPos[ix+1] = (Math.random() - 0.5) * 84;
+    startPos[ix+2] = (Math.random() - 0.5) * 84;
   }
 }
 
-let startSec = performance.now() / 1000;
+let startSec  = performance.now() / 1000;
 let prevPhase = -1;
 
-function animate() {
-  const now = performance.now() / 1000;
-  const t = now - startSec;
-  const cycleT = t % CYCLE;
+function getTunnelWave(i, time, waveFactor) {
+  const tid  = tunnelId[i];
+  const bp   = waveP[i];
+  const cfg  = TC[tid];
+  const flow = ((bp + time * cfg.sp) % 100 + 100) % 100 - 50;
+  const ang  = i * 0.618 + time * 1.15;
+  const r    = 2.0;
+  const sAng = flow * cfg.sf + time * cfg.sps;
 
-  let phase = 0;
-  let waveFactor = 0;
+  let wx2, wy2, wz2;
 
-  if (cycleT < T_INIT) {
-    phase = 0; waveFactor = 0;
-  } else if (cycleT < T_INIT + T_TR1) {
-    phase = 1; waveFactor = easeInOutCubic((cycleT - T_INIT) / T_TR1);
-  } else if (cycleT < T_INIT + T_TR1 + T_WAVE) {
-    phase = 2; waveFactor = 1;
+  if (tid === 0) {
+    // X-axis tunnel — horizontal stream
+    const wy0 = Math.sin(sAng) * cfg.sa;
+    const wz0 = Math.cos(sAng * 0.72) * cfg.sa * 0.68;
+    wx2 = flow + Math.sin(i * 0.27) * 0.3;
+    wy2 = wy0 + Math.cos(ang) * r * cfg.p1a;
+    wz2 = wz0 + Math.sin(ang) * r * cfg.p2a;
+
+  } else if (tid === 1) {
+    // Y-axis tunnel — vertical stream
+    const wx0 = Math.sin(sAng) * cfg.sa;
+    const wz0 = Math.cos(sAng * 0.68) * cfg.sa * 0.72;
+    wx2 = wx0 + Math.cos(ang) * r * cfg.p1a;
+    wy2 = flow + Math.sin(i * 0.27) * 0.3;
+    wz2 = wz0 + Math.sin(ang) * r * cfg.p2a;
+
+  } else if (tid === 2) {
+    // Z-axis tunnel — depth stream
+    const wx0 = Math.sin(sAng) * cfg.sa;
+    const wy0 = Math.cos(sAng * 0.75) * cfg.sa * 0.66;
+    wx2 = wx0 + Math.cos(ang) * r * cfg.p1a;
+    wy2 = wy0 + Math.sin(ang) * r * cfg.p2a;
+    wz2 = flow + Math.sin(i * 0.27) * 0.3;
+
   } else {
-    phase = 3; waveFactor = 1 - easeInOutCubic((cycleT - T_INIT - T_TR1 - T_WAVE) / T_TR2);
+    // XY diagonal tunnel — 45° stream
+    const diag = flow * 0.707;
+    const wx0  = diag + Math.sin(sAng) * cfg.sa * 0.7;
+    const wy0  = diag + Math.cos(sAng * 0.8) * cfg.sa * 0.7;
+    const wz0  = Math.sin(flow * 0.17 + time * 0.5) * cfg.sa * 0.6;
+    wx2 = wx0 + Math.cos(ang) * r * cfg.p1a;
+    wy2 = wy0 + Math.sin(ang) * r * cfg.p2a;
+    wz2 = wz0 + Math.cos(ang * 1.4) * r * 0.6;
   }
 
-  if (phase === 3 && prevPhase !== 3) { newInits(); }
+  return [wx2, wy2, wz2];
+}
+
+function animate() {
+  const now    = performance.now() / 1000;
+  const t      = now - startSec;
+  const cycleT = t % CYCLE;
+
+  let phase = 0, waveFactor = 0;
+  if      (cycleT < T_INIT)                        { phase = 0; waveFactor = 0; }
+  else if (cycleT < T_INIT + T_TR1)                { phase = 1; waveFactor = easeInOutCubic((cycleT - T_INIT) / T_TR1); }
+  else if (cycleT < T_INIT + T_TR1 + T_WAVE)       { phase = 2; waveFactor = 1; }
+  else                                              { phase = 3; waveFactor = 1 - easeInOutCubic((cycleT - T_INIT - T_TR1 - T_WAVE) / T_TR2); }
+
+  if (phase === 3 && prevPhase !== 3) newInits();
   prevPhase = phase;
   uniforms.isWave.value = waveFactor;
 
-  const pos = geometry.attributes.position.array;
+  const pos  = geometry.attributes.position.array;
   const time = t;
 
   for (let i = 0; i < COUNT; i++) {
     const ix = i * 3;
-    const sx = startPos[ix];
-    const sy = startPos[ix + 1];
-    const sz = startPos[ix + 2];
+    const sx = startPos[ix], sy = startPos[ix+1], sz = startPos[ix+2];
+
+    // Ambient drift (idle state)
     const ix0 = sx + Math.sin(time * 0.23 + i * 0.71) * 0.7;
     const iy0 = sy + Math.cos(time * 0.19 + i * 1.13) * 0.7;
     const iz0 = sz + Math.sin(time * 0.17 + i * 0.91) * 0.6;
-    const bx = waveX[i];
-    const flow = ((bx + time * 7.2) % 100 + 100) % 100 - 50;
-    const wx = flow;
-    const wy = Math.sin(wx * 0.18 + time * 0.8) * 8.0;
-    const wz = Math.cos(wx * 0.12 + time * 0.5) * 5.0;
-    const ang = i * 0.618 + time * 1.15;
-    const r = 1.6;
-    const wy2 = wy + Math.cos(ang) * r * 0.75;
-    const wz2 = wz + Math.sin(ang) * r * 0.65;
-    const wx2 = wx + Math.sin(i * 0.27) * 0.25;
+
+    // Tunnel state
+    const [wx2, wy2, wz2] = getTunnelWave(i, time, waveFactor);
+
     const mix = waveFactor;
-    pos[ix]     = ix0 + (wx2 - ix0) * mix;
-    pos[ix + 1] = iy0 + (wy2 - iy0) * mix;
-    pos[ix + 2] = iz0 + (wz2 - iz0) * mix;
+    pos[ix]   = ix0 + (wx2 - ix0) * mix;
+    pos[ix+1] = iy0 + (wy2 - iy0) * mix;
+    pos[ix+2] = iz0 + (wz2 - iz0) * mix;
   }
   geometry.attributes.position.needsUpdate = true;
 
@@ -820,14 +959,15 @@ function animate() {
 
   const orbitAngle = time * 0.03;
   const radius = 68;
-  const baseX = Math.cos(orbitAngle) * radius;
-  const baseZ = Math.sin(orbitAngle) * radius;
-  const baseY = 16 + Math.sin(orbitAngle * 0.5) * 1.8;
-  const targetX = baseX + mouse.x * 4.5;
-  const targetY = baseY - mouse.y * 2.2;
-  const targetZ = baseZ + mouse.x * -1.5;
+  const baseX  = Math.cos(orbitAngle) * radius;
+  const baseZ  = Math.sin(orbitAngle) * radius;
+  const baseY  = 16 + Math.sin(orbitAngle * 0.5) * 1.8;
 
-  camera.position.lerp(new THREE.Vector3(targetX, targetY, targetZ), 0.02);
+  camera.position.lerp(new THREE.Vector3(
+    baseX + mouse.x * 4.5,
+    baseY - mouse.y * 2.2,
+    baseZ + mouse.x * -1.5
+  ), 0.02);
   camera.lookAt(0, 0, 0);
 
   renderer.render(scene, camera);
