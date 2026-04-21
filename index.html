@@ -3,161 +3,192 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Josue Abad — Robotics & Physical AI</title>
+<title>J.A.B.C. — Robotics & Physical AI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Fragment+Mono&display=swap" rel="stylesheet">
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+</script>
 <style>
 :root {
-  --cream:  #F6F1E9;
+  --paper:  #FAF6F0;
+  --cream:  #F3EDE3;
   --cream2: #EDE7DB;
   --cream3: #E5DDD1;
-  --ink:    #1A1614;
+  --ink:    #2B2119;
   --ink2:   #4A423D;
   --ink3:   #8A7F79;
-  --orange: #C84800;
-  --orange2:#E05520;
-  --border: rgba(26,22,20,.1);
-  --card:   rgba(26,22,20,.03);
-  --space:  #08070D;
+  --stone:  #8B7E74;
+  --terra:  #C5602A;
+  --terra2: #A84A1E;
+  --border: rgba(43,33,25,.1);
+  --card:   rgba(43,33,25,.03);
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;line-height:1.75;}
-::selection{background:var(--orange);color:#fff;}
-::-webkit-scrollbar{width:3px;}
-::-webkit-scrollbar-track{background:var(--cream);}
-::-webkit-scrollbar-thumb{background:var(--ink3);border-radius:2px;}
+body{background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;line-height:1.75;-webkit-font-smoothing:antialiased;}
+::selection{background:var(--terra);color:#fff;}
+::-webkit-scrollbar{width:2px;}
+::-webkit-scrollbar-track{background:var(--paper);}
+::-webkit-scrollbar-thumb{background:var(--stone);border-radius:2px;}
 
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1.25rem 3rem;transition:background .4s,border-color .4s;border-bottom:1px solid transparent;}
-nav.s{background:rgba(246,241,233,.92);backdrop-filter:blur(14px);border-color:var(--border);}
-.nl{font-family:'Lora',serif;font-weight:600;font-size:1.05rem;color:#fff;text-decoration:none;letter-spacing:-.01em;transition:color .3s;}
-nav.s .nl{color:var(--ink);}
-.nl em{font-style:italic;color:var(--orange);}
+nav.s{background:rgba(250,246,240,.94);backdrop-filter:blur(16px);border-color:var(--border);}
+.nl{font-family:'Fragment Mono',monospace;font-weight:600;font-size:.85rem;color:var(--ink);text-decoration:none;letter-spacing:.06em;}
+.nl em{font-style:normal;color:var(--terra);}
 .nm{display:flex;gap:2rem;list-style:none;}
-.nm a{font-size:.825rem;font-weight:400;letter-spacing:.03em;color:rgba(255,255,255,.6);text-decoration:none;transition:color .2s;}
-nav.s .nm a{color:var(--ink2);}
-.nm a:hover,nav.s .nm a:hover{color:var(--orange);}
-.nc{font-size:.78rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:rgba(255,255,255,.85);border-bottom:1px solid rgba(255,255,255,.3);padding-bottom:1px;transition:color .2s,border-color .2s;}
-nav.s .nc{color:var(--orange);border-color:var(--orange);}
+.nm a{font-size:.8rem;font-weight:400;letter-spacing:.02em;color:var(--ink3);text-decoration:none;transition:color .2s;}
+.nm a:hover{color:var(--terra);}
+.nc{font-family:'Fragment Mono',monospace;font-size:.68rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--terra);border:1px solid rgba(197,96,42,.3);padding:.38rem .85rem;border-radius:4px;transition:background .2s,color .2s,border-color .2s;}
+.nc:hover{background:var(--terra);color:#fff;border-color:var(--terra);}
 
 /* HERO */
-#hero{position:relative;height:100vh;min-height:640px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--space);}
-#sc{position:absolute;inset:0;width:100%;height:100%;}
-.hi{position:relative;z-index:2;max-width:860px;padding:0 2rem;text-align:center;}
-.hb{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,200,120,.65);margin-bottom:1.5rem;opacity:0;transform:translateY(16px);transition:opacity .7s,transform .7s;}
-h1{font-family:'Lora',serif;font-size:clamp(3.5rem,8.5vw,8.5rem);font-weight:600;line-height:.93;letter-spacing:-.04em;color:#F5EFE4;margin-bottom:1.4rem;opacity:0;transform:translateY(40px);transition:opacity 1s,transform 1s;}
-h1 em{font-style:italic;color:rgba(255,175,70,.85);}
-.hr{font-family:'DM Mono',monospace;font-size:clamp(.75rem,1.6vw,.92rem);color:rgba(200,190,180,.5);letter-spacing:.06em;min-height:1.6em;margin-bottom:1.5rem;opacity:0;transition:opacity .7s;}
-.cur{display:inline-block;width:2px;height:.9em;background:rgba(255,175,70,.7);animation:bl .8s infinite;vertical-align:middle;margin-left:2px;}
-@keyframes bl{0%,100%{opacity:1}50%{opacity:0}}
-.hd{max-width:500px;margin:0 auto 2.5rem;font-size:1rem;font-weight:300;line-height:1.8;color:rgba(200,190,175,.55);opacity:0;transform:translateY(16px);transition:opacity .7s,transform .7s;}
-.ha{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;opacity:0;transform:translateY(16px);transition:opacity .7s,transform .7s;}
-.bf{background:var(--orange);color:#fff;padding:.65rem 1.65rem;border-radius:6px;font-size:.875rem;font-weight:500;letter-spacing:.02em;text-decoration:none;transition:background .2s,transform .2s;}
-.bf:hover{background:var(--orange2);transform:translateY(-2px);}
-.bg{color:rgba(220,210,195,.7);border:1px solid rgba(220,210,195,.2);padding:.65rem 1.65rem;border-radius:6px;font-size:.875rem;font-weight:300;letter-spacing:.02em;text-decoration:none;transition:border-color .2s,color .2s,transform .2s;}
-.bg:hover{border-color:rgba(255,175,70,.4);color:rgba(255,175,70,.8);transform:translateY(-2px);}
-.hs{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.6rem;opacity:0;animation:fi 1s 2.8s forwards;}
-@keyframes fi{to{opacity:.3}}
-.hs span{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(200,190,175,.5);}
-.hs-l{width:1px;height:36px;background:linear-gradient(to bottom,rgba(200,190,175,.4),transparent);}
+#hero{position:relative;height:100vh;min-height:640px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--paper);}
+#hero canvas{display:block;position:absolute;top:0;left:0;width:100%;height:100%;}
+.hero-grain{position:absolute;inset:-20%;pointer-events:none;z-index:2;opacity:0.035;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+.hi{position:relative;z-index:10;max-width:580px;padding:0 2rem;text-align:center;}
+
+.hb{font-family:'Fragment Mono',monospace;font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--stone);margin-bottom:1.8rem;opacity:0;transform:translateY(10px);transition:opacity .6s ease,transform .6s ease;}
+
+.htw{font-family:'Fraunces',serif;font-weight:300;font-size:clamp(1.9rem,4.5vw,3.8rem);line-height:1.05;letter-spacing:-.03em;color:var(--ink);margin-bottom:1.6rem;opacity:0;transform:translateY(28px);transition:opacity .9s ease,transform .9s ease;min-height:1.15em;white-space:nowrap;overflow:visible;}
+
+.cur{display:inline-block;width:2px;height:.7em;background:var(--terra);animation:blink .9s infinite;vertical-align:baseline;margin-left:1px;border-radius:1px;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+.hd{font-size:.875rem;font-weight:300;line-height:1.85;color:var(--stone);max-width:360px;margin:0 auto 2.2rem;opacity:0;transform:translateY(10px);transition:opacity .7s ease,transform .7s ease;}
+
+.ha{display:flex;gap:.65rem;justify-content:center;flex-wrap:wrap;opacity:0;transform:translateY(10px);transition:opacity .7s ease,transform .7s ease;}
+
+/* Liquid text buttons — no box, just text */
+.btn-p,.btn-s{display:inline-flex;align-items:center;background:none;border:none;padding:0;text-decoration:none;font-family:'Fragment Mono',monospace;font-size:.72rem;font-weight:400;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;position:relative;transition:color .25s;}
+.btn-p{color:var(--terra);}
+.btn-s{color:var(--ink3);}
+.btn-p::after,.btn-s::after{content:'';position:absolute;bottom:-2px;left:0;width:100%;height:1px;background:currentColor;opacity:.3;transform:scaleX(0);transform-origin:left;transition:transform .3s cubic-bezier(.22,1,.36,1),opacity .3s;}
+.btn-p:hover::after,.btn-s:hover::after{transform:scaleX(1);opacity:.6;}
+.btn-s:hover{color:var(--terra);}
+
+/* SVG liquid filter applied via JS on hover */
+.liq-active{will-change:filter;}
+
+.hs{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:0;animation:fadeup 1s 2.4s forwards;z-index:10;}
+@keyframes fadeup{to{opacity:.35}}
+.hs span{font-family:'Fragment Mono',monospace;font-size:.54rem;letter-spacing:.16em;text-transform:uppercase;color:var(--stone);}
+.hs-line{width:1px;height:28px;background:linear-gradient(to bottom,var(--stone),transparent);}
 
 /* SHARED */
 section{padding:7rem 0;}
 .container{max-width:1080px;margin:0 auto;padding:0 2.5rem;}
-.tag{font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);display:inline-block;margin-bottom:.85rem;}
-h2{font-family:'Lora',serif;font-size:clamp(2rem,4vw,2.9rem);font-weight:600;letter-spacing:-.03em;color:var(--ink);line-height:1.12;margin-bottom:.85rem;}
+.tag{font-family:'Fragment Mono',monospace;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);display:inline-block;margin-bottom:.8rem;}
+h2{font-family:'Lora',serif;font-size:clamp(2rem,4vw,2.8rem);font-weight:600;letter-spacing:-.03em;color:var(--ink);line-height:1.12;margin-bottom:.8rem;}
 h2 em{font-style:italic;}
-.sub{color:var(--ink3);font-size:.975rem;max-width:480px;margin-bottom:3.5rem;}
-.rv{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.22,1,.36,1),transform .8s cubic-bezier(.22,1,.36,1);}
+.sub{color:var(--stone);font-size:.9rem;max-width:460px;margin-bottom:3.5rem;line-height:1.75;}
+.rv{opacity:0;transform:translateY(22px);transition:opacity .75s cubic-bezier(.22,1,.36,1),transform .75s cubic-bezier(.22,1,.36,1);}
 .rv.in{opacity:1;transform:none;}
-.d1{transition-delay:.1s;}.d2{transition-delay:.2s;}.d3{transition-delay:.3s;}
+.d1{transition-delay:.12s;}.d2{transition-delay:.24s;}.d3{transition-delay:.36s;}.d4{transition-delay:.48s;}
+
+/* slide-in from left */
+.rvl{opacity:0;transform:translateX(-18px);transition:opacity .75s cubic-bezier(.22,1,.36,1),transform .75s cubic-bezier(.22,1,.36,1);}
+.rvl.in{opacity:1;transform:none;}
+
+/* scale in */
+.rvs{opacity:0;transform:scale(.97);transition:opacity .75s cubic-bezier(.22,1,.36,1),transform .75s cubic-bezier(.22,1,.36,1);}
+.rvs.in{opacity:1;transform:none;}
 
 /* ABOUT */
-#about{background:var(--cream);}
-.ag{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;}
-.ap{color:var(--ink2);font-size:.975rem;margin-bottom:1rem;line-height:1.8;}
+#about{background:var(--paper);}
+.ag{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;}
+.ap{color:var(--ink2);font-size:.9rem;margin-bottom:.9rem;line-height:1.85;}
 .ap strong{color:var(--ink);font-weight:500;}
 .al{display:flex;gap:1.25rem;flex-wrap:wrap;margin-top:2rem;}
-.al a{color:var(--orange);text-decoration:none;font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.04em;border-bottom:1px solid rgba(200,72,0,.25);padding-bottom:1px;transition:border-color .2s;}
-.al a:hover{border-color:var(--orange);}
+.al a{color:var(--terra);text-decoration:none;font-family:'Fragment Mono',monospace;font-size:.68rem;letter-spacing:.04em;border-bottom:1px solid rgba(197,96,42,.22);padding-bottom:1px;transition:border-color .2s;}
+.al a:hover{border-color:var(--terra);}
 
-/* CAD wrap */
-.cw{background:#0D1526;border-radius:14px;border:1px solid rgba(255,255,255,.07);overflow:hidden;padding:1.5rem;aspect-ratio:1/1.05;position:relative;}
-.cl{position:absolute;top:1rem;left:1rem;font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(100,160,255,.45);}
-.cr{width:100%;height:100%;}
+/* Number rain canvas container */
+.rain-wrap{position:relative;overflow:hidden;aspect-ratio:1/1.05;background:transparent;}
+.rain-wrap canvas{display:block;width:100%;height:100%;}
 
 /* EXPERIENCE */
 #experience{background:var(--cream2);}
 .tl{position:relative;padding-left:1.75rem;}
 .tl::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:var(--border);}
 .ti{position:relative;padding:0 0 3rem 2rem;}
-.ti::before{content:'';position:absolute;left:-4px;top:7px;width:8px;height:8px;border-radius:50%;background:var(--cream2);border:1.5px solid var(--ink3);transition:border-color .3s,background .3s;}
-.ti:first-child::before{background:var(--orange);border-color:var(--orange);}
-.ti:hover::before{border-color:var(--orange);}
-.td{font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.08em;color:var(--orange);text-transform:uppercase;margin-bottom:.35rem;}
-.tr{font-family:'Lora',serif;font-size:1.1rem;font-weight:600;color:var(--ink);margin-bottom:.2rem;}
-.to{color:var(--ink3);font-size:.875rem;margin-bottom:.75rem;}
+.ti::before{content:'';position:absolute;left:-4px;top:7px;width:8px;height:8px;border-radius:50%;background:var(--cream2);border:1.5px solid var(--stone);transition:border-color .3s,background .3s;}
+.ti:first-child::before{background:var(--terra);border-color:var(--terra);}
+.ti:hover::before{border-color:var(--terra);}
+.td{font-family:'Fragment Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:var(--terra);text-transform:uppercase;margin-bottom:.3rem;}
+.tr{font-family:'Lora',serif;font-size:1.05rem;font-weight:600;color:var(--ink);margin-bottom:.2rem;}
+.to{color:var(--stone);font-size:.875rem;margin-bottom:.7rem;}
 .tb{list-style:none;display:flex;flex-direction:column;gap:.35rem;}
-.tb li{color:var(--ink2);font-size:.9rem;padding-left:1.1rem;position:relative;}
-.tb li::before{content:'—';position:absolute;left:0;color:var(--orange);font-size:.75rem;}
+.tb li{color:var(--ink2);font-size:.875rem;padding-left:1.1rem;position:relative;}
+.tb li::before{content:'—';position:absolute;left:0;color:var(--terra);font-size:.75rem;}
 
 /* PUBLICATIONS */
-#publications{background:var(--cream);}
+#publications{background:var(--paper);}
 .pl{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--border);}
 .pr{display:flex;align-items:flex-start;gap:2rem;padding:2rem 0;border-bottom:1px solid var(--border);transition:background .2s;border-radius:4px;}
 .pr:hover{background:var(--card);}
-.pn{font-family:'DM Mono',monospace;font-size:.8rem;color:var(--ink3);min-width:2rem;padding-top:.1rem;}
+.pn{font-family:'Fragment Mono',monospace;font-size:.78rem;color:var(--stone);min-width:2rem;padding-top:.1rem;}
 .pb{flex:1;}
-.pv{font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:.4rem;}
-.pt{font-family:'Lora',serif;font-size:.975rem;font-weight:500;color:var(--ink);line-height:1.4;margin-bottom:.4rem;}
-.pa{font-size:.85rem;color:var(--ink3);margin-bottom:.6rem;}
+.pv{font-family:'Fragment Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--terra);margin-bottom:.4rem;}
+.pt{font-family:'Lora',serif;font-size:.95rem;font-weight:500;color:var(--ink);line-height:1.4;margin-bottom:.4rem;}
+.pa{font-size:.825rem;color:var(--stone);margin-bottom:.6rem;}
 .pa strong{color:var(--ink2);}
-.pd{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--orange);text-decoration:none;letter-spacing:.03em;transition:opacity .2s;}
-.pd:hover{opacity:.7;}
+.pd{font-family:'Fragment Mono',monospace;font-size:.68rem;color:var(--terra);text-decoration:none;letter-spacing:.03em;transition:opacity .2s;}
+.pd:hover{opacity:.65;}
 
 /* PROJECTS */
 #projects{background:var(--cream2);}
-.pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
-.pc{background:var(--cream2);padding:1.75rem;transition:background .2s;cursor:default;}
-.pc:hover{background:var(--cream);}
-.py{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--ink3);letter-spacing:.06em;margin-bottom:.5rem;text-transform:uppercase;}
-.pname{font-family:'Lora',serif;font-weight:500;font-size:.975rem;color:var(--ink);margin-bottom:.45rem;line-height:1.35;}
-.pi{font-size:.85rem;color:var(--ink2);line-height:1.65;}
-.chips{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:1rem;}
-.chip{font-size:.6rem;font-family:'DM Mono',monospace;letter-spacing:.05em;text-transform:uppercase;background:var(--cream3);color:var(--ink3);padding:.2rem .55rem;border-radius:4px;}
+.pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.pc{background:var(--cream2);padding:1.75rem;transition:background .25s,transform .25s;cursor:default;}
+.pc:hover{background:var(--paper);}
+.py{font-family:'Fragment Mono',monospace;font-size:.58rem;color:var(--stone);letter-spacing:.06em;margin-bottom:.45rem;text-transform:uppercase;}
+.pname{font-family:'Lora',serif;font-weight:500;font-size:.95rem;color:var(--ink);margin-bottom:.4rem;line-height:1.35;}
+.pi{font-size:.825rem;color:var(--ink2);line-height:1.7;}
+.chips{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.9rem;}
+.chip{font-size:.58rem;font-family:'Fragment Mono',monospace;letter-spacing:.05em;text-transform:uppercase;background:var(--cream3);color:var(--stone);padding:.18rem .5rem;border-radius:3px;}
 
 /* SKILLS */
-#skills{background:var(--cream);}
-.sw{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:2.5rem;}
-.sgt{font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:.85rem;}
-.sps{display:flex;flex-wrap:wrap;gap:.4rem;}
-.sp{background:var(--cream2);color:var(--ink2);border:1px solid transparent;padding:.28rem .7rem;border-radius:5px;font-size:.8rem;font-weight:400;transition:border-color .2s,color .2s;}
-.sp:hover{border-color:var(--orange);color:var(--ink);}
+#skills{background:var(--paper);}
+.sw{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:2.5rem;}
+.sgt{font-family:'Fragment Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--terra);margin-bottom:.75rem;}
+.sps{display:flex;flex-wrap:wrap;gap:.35rem;}
+.sp{background:var(--cream);color:var(--ink2);border:1px solid transparent;padding:.26rem .65rem;border-radius:4px;font-size:.78rem;font-weight:300;transition:border-color .2s,color .2s,background .2s;}
+.sp:hover{border-color:var(--terra);color:var(--ink);background:var(--paper);}
 
 /* CONTACT */
 #contact{background:var(--cream2);border-top:1px solid var(--border);text-align:center;}
 .ch{font-family:'Lora',serif;font-size:clamp(2.2rem,5vw,4rem);font-weight:600;letter-spacing:-.04em;color:var(--ink);line-height:1.08;margin-bottom:1rem;}
-.ch em{font-style:italic;color:var(--orange);}
-.cb{color:var(--ink3);max-width:380px;margin:0 auto 2.5rem;font-size:.975rem;}
+.ch em{font-style:italic;color:var(--terra);}
+.cb{color:var(--stone);max-width:360px;margin:0 auto 2.5rem;font-size:.9rem;}
 .crow{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;margin-bottom:3.5rem;}
-.cl2{display:inline-flex;align-items:center;gap:.5rem;background:var(--cream);border:1px solid var(--border);color:var(--ink2);text-decoration:none;padding:.6rem 1.35rem;border-radius:7px;font-size:.85rem;transition:border-color .2s,color .2s,transform .2s;}
-.cl2:hover{border-color:var(--orange);color:var(--orange);transform:translateY(-2px);}
-.cl2 svg{width:14px;height:14px;opacity:.55;}
-footer{border-top:1px solid var(--border);padding-top:2rem;color:var(--ink3);font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.04em;}
+.cl2{display:inline-flex;align-items:center;gap:.5rem;background:transparent;border:1px solid var(--border);color:var(--ink2);text-decoration:none;padding:.55rem 1.25rem;border-radius:6px;font-size:.825rem;transition:border-color .2s,color .2s,transform .2s;}
+.cl2:hover{border-color:var(--terra);color:var(--terra);transform:translateY(-2px);}
+.cl2 svg{width:13px;height:13px;opacity:.5;}
+footer{border-top:1px solid var(--border);padding-top:2rem;color:var(--stone);font-family:'Fragment Mono',monospace;font-size:.6rem;letter-spacing:.04em;}
 
-@media(max-width:768px){
-  nav{padding:1rem 1.5rem;} .nm{display:none;}
-  .ag{grid-template-columns:1fr;gap:2.5rem;} .cw{display:none;}
-  section{padding:5rem 0;}
-}
+/* Section divider line animation */
+.sec-line{width:0;height:1px;background:var(--terra);opacity:.25;margin-bottom:2rem;transition:width 1.2s cubic-bezier(.22,1,.36,1);}
+.sec-line.in{width:60px;}
+
+@media(max-width:768px){nav{padding:1rem 1.5rem;} .nm{display:none;} .ag{grid-template-columns:1fr;gap:2.5rem;} .rain-wrap{display:none;} section{padding:5rem 0;}}
 </style>
 </head>
 <body>
 
+<!-- SVG liquid filter for buttons -->
+<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+  <defs>
+    <filter id="liq" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feTurbulence id="liq-turb" type="turbulence" baseFrequency="0 0" numOctaves="3" seed="5" result="turb"/>
+      <feDisplacementMap in="SourceGraphic" in2="turb" id="liq-disp" scale="0" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+
 <nav id="nav">
-  <a href="#hero" class="nl">Josue <em>Abad</em></a>
+  <a href="#hero" class="nl">J.<em>A</em>.B.C.</a>
   <ul class="nm">
     <li><a href="#about">About</a></li>
     <li><a href="#experience">Experience</a></li>
@@ -169,131 +200,52 @@ footer{border-top:1px solid var(--border);padding-top:2rem;color:var(--ink3);fon
 </nav>
 
 <section id="hero">
-  <canvas id="sc"></canvas>
+  <canvas id="c"></canvas>
+  <div class="hero-grain"></div>
   <div class="hi">
-    <div class="hb">Robotics Engineer &nbsp;·&nbsp; Physical AI &nbsp;·&nbsp; Lima, Peru</div>
-    <h1>The future<br>moves <em>now.</em></h1>
-    <div class="hr"><span id="typed"></span><span class="cur"></span></div>
-    <p class="hd">Building intelligent machines that move, perceive, and act — at the intersection of robotics, machine learning, and the physical world.</p>
-    <div class="ha">
-      <a href="#projects" class="bf">View Projects</a>
-      <a href="#publications" class="bg">Publications</a>
+    <div class="htw" id="htw"><span id="typed"></span><span class="cur"></span></div>
+    <p class="hd" id="hd">Building intelligent machines that move, perceive, and act in the real world.</p>
+    <div class="ha" id="ha">
+      <a href="#projects" class="btn-p">View Projects</a>
+      <a href="#publications" class="btn-s">Publications →</a>
     </div>
   </div>
-  <div class="hs"><span>scroll</span><div class="hs-l"></div></div>
+  <div class="hs"><span>scroll</span><div class="hs-line"></div></div>
 </section>
 
 <!-- ABOUT -->
 <section id="about">
   <div class="container">
     <div class="ag">
-      <div class="rv">
-        <span class="tag">About</span>
-        <h2>Robots that learn,<br><em>systems that adapt.</em></h2>
-        <p class="ap">I work at the intersection of <strong>robotics, machine learning, and physical systems</strong> — designing and training intelligent machines that learn from data, interact with their environment, and improve over time.</p>
-        <p class="ap">My work spans the full stack: from <strong>reinforcement learning and computer vision</strong> to mechanical design and real-time control — always with an eye toward deployment in the real world, not just simulation.</p>
-        <p class="ap">B.Sc. Mechatronics Engineering, UTEC Lima. Currently a researcher and open to PhD/Master's programs in Robotics, Physical AI, and Human-Robot Interaction.</p>
-        <div class="al">
-          <a href="mailto:abadjosue25@gmail.com">abadjosue25@gmail.com</a>
+      <div>
+        <span class="tag rvl">About</span>
+        <div class="sec-line rv"></div>
+        <h2 class="rv">Where machines<br>begin to <em>think.</em></h2>
+        <p class="ap rv d1">I work at the intersection of <strong>robotics, machine learning, and physical systems</strong> — building and training intelligent machines that sense their environment, learn from data, and improve through experience.</p>
+        <p class="ap rv d2">My work spans the full stack: from <strong>deep learning and computer vision</strong> to mechanical design and real-time control. I care about one thing above all — systems that work outside the lab, in the messiness of the real world.</p>
+        <p class="ap rv d3">Mechatronics Engineering at UTEC Lima. Researcher at NonHuman. Open to PhD/Master's opportunities in Robotics, Physical AI, and Human-Robot Interaction worldwide.</p>
+        <div class="al rv d4">
+          <a href="mailto:abadjosue25@gmail.com">Write me</a>
           <a href="https://github.com/josue99999" target="_blank">GitHub</a>
           <a href="https://huggingface.co/josabb" target="_blank">HuggingFace</a>
         </div>
       </div>
-
-      <div class="cw rv d2">
-        <div class="cl">HMD-01 &nbsp;·&nbsp; Assembly View &nbsp;·&nbsp; Rev 3</div>
-        <svg class="cr" viewBox="0 0 300 380" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="g" width="20" height="20" patternUnits="userSpaceOnUse">
-              <path d="M20 0L0 0 0 20" fill="none" stroke="rgba(100,140,255,0.07)" stroke-width="0.5"/>
-            </pattern>
-          </defs>
-          <rect width="300" height="380" fill="url(#g)"/>
-          <line x1="150" y1="10" x2="150" y2="370" stroke="rgba(100,160,255,0.12)" stroke-width="0.5" stroke-dasharray="4,4"/>
-          <!-- HEAD -->
-          <rect x="119" y="32" width="62" height="52" rx="10" fill="none" stroke="rgba(120,180,255,0.7)" stroke-width="1"/>
-          <rect x="127" y="43" width="46" height="18" rx="3" fill="rgba(100,180,255,0.06)" stroke="rgba(100,180,255,0.4)" stroke-width="0.75"/>
-          <circle cx="141" cy="52" r="3" fill="rgba(100,220,255,0.6)"/>
-          <circle cx="159" cy="52" r="3" fill="rgba(100,220,255,0.6)"/>
-          <line x1="135" y1="32" x2="135" y2="26" stroke="rgba(120,180,255,0.35)" stroke-width="0.75"/>
-          <line x1="165" y1="32" x2="165" y2="26" stroke="rgba(120,180,255,0.35)" stroke-width="0.75"/>
-          <line x1="135" y1="26" x2="165" y2="26" stroke="rgba(120,180,255,0.35)" stroke-width="0.75"/>
-          <!-- dim lines -->
-          <line x1="110" y1="32" x2="110" y2="84" stroke="rgba(100,160,255,0.2)" stroke-width="0.5"/>
-          <line x1="106" y1="32" x2="114" y2="32" stroke="rgba(100,160,255,0.2)" stroke-width="0.5"/>
-          <line x1="106" y1="84" x2="114" y2="84" stroke="rgba(100,160,255,0.2)" stroke-width="0.5"/>
-          <text x="98" y="60" font-family="DM Mono,monospace" font-size="5.5" fill="rgba(100,160,255,0.4)" text-anchor="middle">52mm</text>
-          <!-- NECK -->
-          <rect x="140" y="84" width="20" height="14" rx="2" fill="none" stroke="rgba(120,180,255,0.45)" stroke-width="0.75"/>
-          <!-- TORSO -->
-          <rect x="103" y="98" width="94" height="96" rx="8" fill="none" stroke="rgba(120,180,255,0.7)" stroke-width="1"/>
-          <rect x="117" y="110" width="30" height="22" rx="3" fill="rgba(100,180,255,0.05)" stroke="rgba(100,180,255,0.28)" stroke-width="0.5"/>
-          <text x="132" y="124" font-family="DM Mono,monospace" font-size="5" fill="rgba(100,180,255,0.48)" text-anchor="middle">CPU</text>
-          <rect x="153" y="110" width="30" height="22" rx="3" fill="rgba(255,180,100,0.05)" stroke="rgba(255,180,100,0.25)" stroke-width="0.5"/>
-          <text x="168" y="124" font-family="DM Mono,monospace" font-size="5" fill="rgba(255,180,100,0.48)" text-anchor="middle">IMU</text>
-          <line x1="108" y1="145" x2="192" y2="145" stroke="rgba(120,180,255,0.12)" stroke-width="0.5" stroke-dasharray="3,3"/>
-          <line x1="108" y1="163" x2="192" y2="163" stroke="rgba(120,180,255,0.12)" stroke-width="0.5" stroke-dasharray="3,3"/>
-          <line x1="204" y1="98" x2="204" y2="194" stroke="rgba(100,160,255,0.2)" stroke-width="0.5"/>
-          <line x1="200" y1="98" x2="208" y2="98" stroke="rgba(100,160,255,0.2)" stroke-width="0.5"/>
-          <line x1="200" y1="194" x2="208" y2="194" stroke="rgba(100,160,255,0.2)" stroke-width="0.5"/>
-          <text x="219" y="148" font-family="DM Mono,monospace" font-size="5.5" fill="rgba(100,160,255,0.4)" text-anchor="middle">96mm</text>
-          <!-- SHOULDER JOINTS -->
-          <circle cx="100" cy="108" r="7" fill="none" stroke="rgba(255,180,100,0.55)" stroke-width="1"/>
-          <circle cx="100" cy="108" r="2.5" fill="rgba(255,180,100,0.28)"/>
-          <circle cx="200" cy="108" r="7" fill="none" stroke="rgba(255,180,100,0.55)" stroke-width="1"/>
-          <circle cx="200" cy="108" r="2.5" fill="rgba(255,180,100,0.28)"/>
-          <!-- LEFT ARM -->
-          <rect x="74" y="115" width="19" height="62" rx="6" fill="none" stroke="rgba(120,180,255,0.5)" stroke-width="0.75"/>
-          <circle cx="83" cy="182" r="6" fill="none" stroke="rgba(255,180,100,0.5)" stroke-width="0.75"/>
-          <circle cx="83" cy="182" r="2.5" fill="rgba(255,180,100,0.22)"/>
-          <rect x="76" y="188" width="16" height="50" rx="5" fill="none" stroke="rgba(120,180,255,0.38)" stroke-width="0.75"/>
-          <rect x="73" y="238" width="21" height="22" rx="4" fill="none" stroke="rgba(120,180,255,0.38)" stroke-width="0.75"/>
-          <text x="54" y="150" font-family="DM Mono,monospace" font-size="5.5" fill="rgba(255,180,100,0.48)">3-DOF</text>
-          <!-- RIGHT ARM -->
-          <rect x="207" y="115" width="19" height="62" rx="6" fill="none" stroke="rgba(120,180,255,0.5)" stroke-width="0.75"/>
-          <circle cx="217" cy="182" r="6" fill="none" stroke="rgba(255,180,100,0.5)" stroke-width="0.75"/>
-          <circle cx="217" cy="182" r="2.5" fill="rgba(255,180,100,0.22)"/>
-          <rect x="208" y="188" width="16" height="50" rx="5" fill="none" stroke="rgba(120,180,255,0.38)" stroke-width="0.75"/>
-          <rect x="206" y="238" width="21" height="22" rx="4" fill="none" stroke="rgba(120,180,255,0.38)" stroke-width="0.75"/>
-          <text x="229" y="150" font-family="DM Mono,monospace" font-size="5.5" fill="rgba(255,180,100,0.48)">3-DOF</text>
-          <!-- HIP -->
-          <rect x="118" y="194" width="64" height="18" rx="4" fill="none" stroke="rgba(120,180,255,0.38)" stroke-width="0.75"/>
-          <circle cx="135" cy="203" r="5" fill="none" stroke="rgba(255,180,100,0.5)" stroke-width="0.75"/>
-          <circle cx="165" cy="203" r="5" fill="none" stroke="rgba(255,180,100,0.5)" stroke-width="0.75"/>
-          <!-- LEFT LEG -->
-          <rect x="122" y="212" width="22" height="72" rx="7" fill="none" stroke="rgba(120,180,255,0.5)" stroke-width="0.75"/>
-          <circle cx="133" cy="288" r="7" fill="none" stroke="rgba(255,180,100,0.5)" stroke-width="0.75"/>
-          <circle cx="133" cy="288" r="2.5" fill="rgba(255,180,100,0.22)"/>
-          <rect x="124" y="295" width="20" height="54" rx="6" fill="none" stroke="rgba(120,180,255,0.38)" stroke-width="0.75"/>
-          <rect x="116" y="348" width="34" height="12" rx="3" fill="none" stroke="rgba(120,180,255,0.38)" stroke-width="0.75"/>
-          <!-- RIGHT LEG -->
-          <rect x="156" y="212" width="22" height="72" rx="7" fill="none" stroke="rgba(120,180,255,0.5)" stroke-width="0.75"/>
-          <circle cx="167" cy="288" r="7" fill="none" stroke="rgba(255,180,100,0.5)" stroke-width="0.75"/>
-          <circle cx="167" cy="288" r="2.5" fill="rgba(255,180,100,0.22)"/>
-          <rect x="156" y="295" width="20" height="54" rx="6" fill="none" stroke="rgba(120,180,255,0.38)" stroke-width="0.75"/>
-          <rect x="150" y="348" width="34" height="12" rx="3" fill="none" stroke="rgba(120,180,255,0.38)" stroke-width="0.75"/>
-          <text x="200" y="290" font-family="DM Mono,monospace" font-size="5.5" fill="rgba(255,180,100,0.48)">5-DOF</text>
-          <!-- title block -->
-          <rect x="4" y="356" width="90" height="20" fill="none" stroke="rgba(100,160,255,0.18)" stroke-width="0.5"/>
-          <text x="8" y="365" font-family="DM Mono,monospace" font-size="5" fill="rgba(100,160,255,0.38)">HUMANOID · HMD-01</text>
-          <text x="8" y="373" font-family="DM Mono,monospace" font-size="4.5" fill="rgba(100,160,255,0.28)">JOSUE ABAD · 2026</text>
-        </svg>
+      <div class="rain-wrap rvs d2">
+        <canvas id="rain"></canvas>
       </div>
     </div>
   </div>
 </section>
 
-<!-- EXPERIENCE -->
 <section id="experience">
   <div class="container">
     <span class="tag rv">Experience</span>
+    <div class="sec-line rv"></div>
     <h2 class="rv">Where I've<br><em>built things.</em></h2>
     <p class="sub rv">Research and engineering roles focused on intelligent robotic systems.</p>
     <div class="tl">
       <div class="ti rv">
-        <div class="td">Jan 2026 – Present</div>
-        <div class="tr">Robotics Researcher</div>
-        <div class="to">NonHuman — Lima, Peru</div>
+        <div class="td">Jan 2026 – Present</div><div class="tr">Robotics Researcher</div><div class="to">NonHuman — Lima, Peru</div>
         <ul class="tb">
           <li>RL policies for humanoid locomotion on Unitree H1_2 and G1 (flat, stairs, rough terrain via curriculum)</li>
           <li>Bimanual teleoperation via Meta Quest 3 using IK and real-time motion retargeting</li>
@@ -302,9 +254,7 @@ footer{border-top:1px solid var(--border);padding-top:2rem;color:var(--ink3);fon
         </ul>
       </div>
       <div class="ti rv d1">
-        <div class="td">Feb 2025 – Dec 2025</div>
-        <div class="tr">Research Intern</div>
-        <div class="to">UTEC – University of Alberta · Funded by Prociencia</div>
+        <div class="td">Feb 2025 – Dec 2025</div><div class="tr">Research Intern</div><div class="to">UTEC – University of Alberta · Funded by Prociencia</div>
         <ul class="tb">
           <li>8-DOF actuated upper-limb exoskeleton (BLDC) for musculoskeletal risk mitigation in underground mining</li>
           <li>End-to-end: mechanical design, electronics, and control system integration</li>
@@ -312,9 +262,7 @@ footer{border-top:1px solid var(--border);padding-top:2rem;color:var(--ink3);fon
         </ul>
       </div>
       <div class="ti rv d2">
-        <div class="td">Sep 2023 – Dec 2024</div>
-        <div class="tr">Teaching & Laboratory Assistant</div>
-        <div class="to">UTEC – Mechatronics Department</div>
+        <div class="td">Sep 2023 – Dec 2024</div><div class="tr">Teaching & Laboratory Assistant</div><div class="to">UTEC – Mechatronics Department</div>
         <ul class="tb">
           <li>Modeling & Simulation and Automatic Control courses — labs, grading, mentoring</li>
           <li>Managed lab equipment: robots, actuators, sensors, and instrumentation</li>
@@ -324,10 +272,10 @@ footer{border-top:1px solid var(--border);padding-top:2rem;color:var(--ink3);fon
   </div>
 </section>
 
-<!-- PUBLICATIONS -->
 <section id="publications">
   <div class="container">
     <span class="tag rv">Research</span>
+    <div class="sec-line rv"></div>
     <h2 class="rv">Publications.</h2>
     <div class="pl">
       <div class="pr rv">
@@ -352,10 +300,10 @@ footer{border-top:1px solid var(--border);padding-top:2rem;color:var(--ink3);fon
   </div>
 </section>
 
-<!-- PROJECTS -->
 <section id="projects">
   <div class="container">
     <span class="tag rv">Projects</span>
+    <div class="sec-line rv"></div>
     <h2 class="rv">What I've <em>built.</em></h2>
     <p class="sub rv">Engineering and research work across robotics, vision, and control.</p>
     <div class="pg">
@@ -371,23 +319,52 @@ footer{border-top:1px solid var(--border);padding-top:2rem;color:var(--ink3);fon
   </div>
 </section>
 
-<!-- SKILLS -->
 <section id="skills">
   <div class="container">
     <span class="tag rv">Skills</span>
+    <div class="sec-line rv"></div>
     <h2 class="rv">Technical stack.</h2>
     <div class="sw">
-      <div class="rv"><div class="sgt">Programming</div><div class="sps"><span class="sp">Python</span><span class="sp">C/C++</span><span class="sp">R</span><span class="sp">MATLAB</span></div></div>
-      <div class="rv d1"><div class="sgt">Robotics & Sim</div><div class="sps"><span class="sp">ROS 2</span><span class="sp">Isaac Lab</span><span class="sp">MuJoCo</span><span class="sp">Gazebo</span><span class="sp">LeRobot</span><span class="sp">Unitree SDK</span><span class="sp">PyBullet</span></div></div>
-      <div class="rv d2"><div class="sgt">AI / ML / Vision</div><div class="sps"><span class="sp">RL (PPO)</span><span class="sp">Imitation Learning</span><span class="sp">VLA Models</span><span class="sp">ACT</span><span class="sp">YOLOv8</span><span class="sp">SMPL-X</span><span class="sp">SLAM</span></div></div>
-      <div class="rv d3"><div class="sgt">Control Systems</div><div class="sps"><span class="sp">Feedback Linearization</span><span class="sp">MPC</span><span class="sp">Sliding Mode</span><span class="sp">MRAC</span><span class="sp">PID</span></div></div>
-      <div class="rv"><div class="sgt">Industrial</div><div class="sps"><span class="sp">TIA Portal</span><span class="sp">Codesys</span><span class="sp">LabVIEW</span><span class="sp">PLC</span><span class="sp">FluidSIM</span></div></div>
-      <div class="rv d1"><div class="sgt">Tools & CAD</div><div class="sps"><span class="sp">Fusion 360</span><span class="sp">Linux</span><span class="sp">Figma</span><span class="sp">Git</span><span class="sp">Power BI</span></div></div>
+      <div class="rv">
+        <div class="sgt">Programming</div>
+        <div class="sps">
+          <span class="sp">Python</span><span class="sp">C/C++</span><span class="sp">R</span><span class="sp">MATLAB</span><span class="sp">Bash</span><span class="sp">CUDA</span>
+        </div>
+      </div>
+      <div class="rv d1">
+        <div class="sgt">Robotics & Sim</div>
+        <div class="sps">
+          <span class="sp">ROS 2</span><span class="sp">Isaac Lab</span><span class="sp">MuJoCo</span><span class="sp">Gazebo</span><span class="sp">LeRobot</span><span class="sp">Unitree SDK</span><span class="sp">PyBullet</span><span class="sp">Drake</span>
+        </div>
+      </div>
+      <div class="rv d2">
+        <div class="sgt">AI / ML / Vision</div>
+        <div class="sps">
+          <span class="sp">PyTorch</span><span class="sp">JAX</span><span class="sp">HuggingFace</span><span class="sp">RL (PPO / SAC)</span><span class="sp">Imitation Learning</span><span class="sp">VLA Models</span><span class="sp">ACT / Diffusion Policy</span><span class="sp">YOLOv8</span><span class="sp">OpenCV</span><span class="sp">SMPL-X</span><span class="sp">SLAM</span><span class="sp">Weights & Biases</span>
+        </div>
+      </div>
+      <div class="rv d3">
+        <div class="sgt">Control Systems</div>
+        <div class="sps">
+          <span class="sp">Feedback Linearization</span><span class="sp">MPC</span><span class="sp">Sliding Mode</span><span class="sp">MRAC</span><span class="sp">PID</span><span class="sp">LQR</span><span class="sp">Impedance Control</span>
+        </div>
+      </div>
+      <div class="rv">
+        <div class="sgt">Infrastructure</div>
+        <div class="sps">
+          <span class="sp">Docker</span><span class="sp">Linux</span><span class="sp">Git</span><span class="sp">SSH</span><span class="sp">Slurm / HPC</span><span class="sp">NumPy / SciPy</span><span class="sp">Pandas</span>
+        </div>
+      </div>
+      <div class="rv d1">
+        <div class="sgt">Industrial & CAD</div>
+        <div class="sps">
+          <span class="sp">Fusion 360</span><span class="sp">SolidWorks</span><span class="sp">TIA Portal</span><span class="sp">Codesys</span><span class="sp">LabVIEW</span><span class="sp">PLC</span><span class="sp">Figma</span><span class="sp">Power BI</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- CONTACT -->
 <section id="contact">
   <div class="container">
     <div class="ch rv">Open to what<br>comes <em>next.</em></div>
@@ -406,169 +383,465 @@ footer{border-top:1px solid var(--border);padding-top:2rem;color:var(--ink3);fon
         HuggingFace
       </a>
     </div>
-    <footer><p>© 2026 Josue Abad &nbsp;·&nbsp; Lima, Peru</p></footer>
+    <footer><p>© 2026 J.A.B.C. &nbsp;·&nbsp; Lima, Peru</p></footer>
   </div>
 </section>
 
 <script>
-// NAV scroll
-const nav=document.getElementById('nav');
-window.addEventListener('scroll',()=>nav.classList.toggle('s',scrollY>60),{passive:true});
+/* ── NAV SCROLL ── */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => nav.classList.toggle('s', scrollY > 60), { passive: true });
 
-// Hero entry
-[
-  ['.hb',300],['h1',600],['.hr',1050],['.hd',1150],['.ha',1320]
-].forEach(([sel,delay])=>{
-  setTimeout(()=>{
-    const el=document.querySelector(sel);
-    if(el){el.style.transition='opacity .8s ease,transform .8s ease';el.style.opacity='1';el.style.transform='none';}
-  },delay);
+/* ── HERO REVEAL ── */
+[['htw',240],['hd',600],['ha',820]].forEach(([id,delay]) => {
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if (el) { el.style.opacity='1'; el.style.transform='none'; }
+  }, delay);
 });
 
-// Typewriter
+/* ── LIQUID BUTTON HOVER ── */
 (()=>{
-  const lines=['Humanoid Locomotion','Physical AI Research','Motion Retargeting','Bimanual Teleoperation','VLA Models','Everything evolves.'];
-  const el=document.getElementById('typed');
-  let li=0,ci=0,del=false;
-  function t(){
-    const w=lines[li];
-    if(!del){el.textContent=w.slice(0,++ci);if(ci===w.length){del=true;setTimeout(t,1700);return;}}
-    else{el.textContent=w.slice(0,--ci);if(ci===0){del=false;li=(li+1)%lines.length;}}
-    setTimeout(t,del?40:82);
-  }
-  setTimeout(t,1400);
+  const turb = document.getElementById('liq-turb');
+  const disp = document.getElementById('liq-disp');
+  if (!turb || !disp) return;
+
+  document.querySelectorAll('.btn-p, .btn-s').forEach(btn => {
+    let raf, freq = 0, target = 0;
+
+    function tick() {
+      freq += (target - freq) * 0.12;
+      const noisy = freq + Math.sin(Date.now() * 0.008) * freq * 0.35;
+      turb.setAttribute('baseFrequency', `${noisy * 0.7} ${noisy}`);
+      disp.setAttribute('scale', freq * 18);
+      if (Math.abs(freq - target) > 0.0005 || target > 0) {
+        raf = requestAnimationFrame(tick);
+      } else {
+        cancelAnimationFrame(raf);
+        btn.style.filter = '';
+      }
+    }
+
+    btn.addEventListener('mouseenter', () => {
+      target = 1;
+      btn.style.filter = 'url(#liq)';
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(tick);
+    });
+
+    btn.addEventListener('mouseleave', () => {
+      target = 0;
+      raf = requestAnimationFrame(tick);
+    });
+  });
 })();
 
-// Intersection Observer
-const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});},{threshold:.12});
-document.querySelectorAll('.rv').forEach(el=>io.observe(el));
-
-// SPACE CANVAS
+/* ── TYPEWRITER ── */
 (()=>{
-  const canvas=document.getElementById('sc');
-  const ctx=canvas.getContext('2d');
-  let W,H,mouse={x:-9999,y:-9999};
-
-  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=canvas.offsetHeight||window.innerHeight;}
-  resize();
-  window.addEventListener('resize',resize,{passive:true});
-  canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;},{passive:true});
-  canvas.addEventListener('mouseleave',()=>{mouse.x=-9999;mouse.y=-9999;});
-
-  // Stars
-  const stars=Array.from({length:280},()=>({
-    x:Math.random(),y:Math.random(),
-    r:Math.pow(Math.random(),2.8)*1.8+.15,
-    base:Math.random()*.45+.1,
-    phase:Math.random()*Math.PI*2,
-    speed:Math.random()*.0012+.0004,
-  }));
-
-  // Comets
-  class Comet{
-    constructor(scattered){this.reset(scattered);}
-    reset(scattered){
-      const fromLeft=Math.random()<.5;
-      this.x=fromLeft?-100:W+100;
-      this.y=Math.random()*H*.7+H*.05;
-      const spd=Math.random()*2.8+1.4;
-      this.vx=fromLeft?spd:-spd;
-      this.vy=(Math.random()-.5)*1.0;
-      this.trail=[];
-      this.maxT=Math.floor(Math.random()*28+16);
-      this.sz=Math.random()*1.3+.4;
-      this.hue=Math.random()<.55?42:210;
-      if(scattered){this.x=Math.random()*W;this.y=Math.random()*H*.65;}
+  const lines = ['Josue Abad','Robotics Engineer','Physical AI','Humanoid Locomotion','Computer Vision','Josue Abad'];
+  const el = document.getElementById('typed');
+  let li=0, ci=0, del=false;
+  function tick(){
+    const w = lines[li];
+    if (!del) {
+      el.textContent = w.slice(0,++ci);
+      if (ci === w.length){ del=true; setTimeout(tick, li===0||li===lines.length-1?2400:1300); return; }
+    } else {
+      el.textContent = w.slice(0,--ci);
+      if (ci===0){ del=false; li=(li+1)%lines.length; }
     }
-    update(){
-      // mouse repulsion
-      const dx=this.x-mouse.x,dy=this.y-mouse.y,d=Math.sqrt(dx*dx+dy*dy);
-      if(d<140){const f=(140-d)/140*.22;this.vx+=dx/d*f;this.vy+=dy/d*f;}
-      this.vx*=.9985;this.vy*=.9985;
-      this.trail.unshift({x:this.x,y:this.y});
-      if(this.trail.length>this.maxT)this.trail.pop();
-      this.x+=this.vx;this.y+=this.vy;
-      if(this.x<-250||this.x>W+250||this.y<-200||this.y>H+200)this.reset(false);
-    }
-    draw(){
-      for(let i=1;i<this.trail.length;i++){
-        const t=1-i/this.trail.length,a=t*t*.65;
-        ctx.beginPath();
-        ctx.moveTo(this.trail[i-1].x,this.trail[i-1].y);
-        ctx.lineTo(this.trail[i].x,this.trail[i].y);
-        ctx.strokeStyle=`hsla(${this.hue},88%,78%,${a})`;
-        ctx.lineWidth=this.sz*t*1.8;
-        ctx.lineCap='round';
-        ctx.stroke();
-      }
-      const g=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.sz*6);
-      g.addColorStop(0,`hsla(${this.hue},95%,96%,.85)`);
-      g.addColorStop(.4,`hsla(${this.hue},80%,75%,.35)`);
-      g.addColorStop(1,`hsla(${this.hue},60%,60%,0)`);
-      ctx.beginPath();ctx.arc(this.x,this.y,this.sz*6,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
-      ctx.beginPath();ctx.arc(this.x,this.y,this.sz,0,Math.PI*2);ctx.fillStyle=`hsla(${this.hue},100%,96%,.95)`;ctx.fill();
-    }
+    setTimeout(tick, del?34:72);
   }
+  setTimeout(tick, 700);
+})();
 
-  const comets=Array.from({length:8},(_, i)=>new Comet(i>0));
-
-  // Click burst
-  const burst=[];
-  canvas.addEventListener('click',e=>{
-    const r=canvas.getBoundingClientRect(),cx=e.clientX-r.left,cy=e.clientY-r.top;
-    for(let i=0;i<16;i++){
-      const a=(i/16)*Math.PI*2,spd=Math.random()*3.5+1;
-      burst.push({x:cx,y:cy,vx:Math.cos(a)*spd,vy:Math.sin(a)*spd,life:1,r:Math.random()*1.8+.4});
+/* ── INTERSECTION OBSERVER — all animation classes ── */
+const io = new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('in');
     }
   });
+},{threshold:.08});
+document.querySelectorAll('.rv, .rvl, .rvs, .sec-line').forEach(el=>io.observe(el));
 
-  // Aurora
-  let at=0;
-  function frame(){
-    requestAnimationFrame(frame);
-    ctx.clearRect(0,0,W,H);
-    ctx.fillStyle='#08070D';ctx.fillRect(0,0,W,H);
-
-    // Aurora bands
-    at+=.003;
-    [0,1].forEach(b=>{
-      const y=H*(.22+b*.32)+Math.sin(at+b*1.8)*H*.07;
-      const gr=ctx.createLinearGradient(0,y-70,0,y+70);
-      const hue=b?270:220;
-      gr.addColorStop(0,'transparent');
-      gr.addColorStop(.5,`hsla(${hue},55%,32%,.05)`);
-      gr.addColorStop(1,'transparent');
-      ctx.fillStyle=gr;ctx.fillRect(0,y-70,W,140);
-    });
-
-    // Stars
-    const t=performance.now()*.001;
-    stars.forEach(s=>{
-      const sx=s.x*W,sy=s.y*H;
-      const px=(mouse.x/W-.5)*s.r*-2.5,py=(mouse.y/H-.5)*s.r*-2.5;
-      const tw=s.base+Math.sin(t*s.speed*1000+s.phase)*.075;
-      ctx.beginPath();ctx.arc(sx+px,sy+py,s.r,0,Math.PI*2);
-      ctx.fillStyle=`rgba(230,220,205,${Math.min(tw,.9)})`;ctx.fill();
-    });
-
-    comets.forEach(c=>{c.update();c.draw();});
-
-    for(let i=burst.length-1;i>=0;i--){
-      const p=burst[i];
-      p.x+=p.vx;p.y+=p.vy;p.vx*=.94;p.vy*=.94;p.life-=.022;
-      if(p.life<=0){burst.splice(i,1);continue;}
-      ctx.beginPath();ctx.arc(p.x,p.y,p.r*p.life,0,Math.PI*2);
-      ctx.fillStyle=`rgba(255,200,100,${p.life*.75})`;ctx.fill();
-    }
-
-    if(mouse.x>0){
-      const mg=ctx.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,90);
-      mg.addColorStop(0,'rgba(255,175,70,.07)');mg.addColorStop(1,'transparent');
-      ctx.fillStyle=mg;ctx.fillRect(0,0,W,H);
-    }
+/* ── ABOUT CANVAS — 3D Neural Sphere (robotics × ML × physical) ── */
+(()=>{
+  const canvas = document.getElementById('rain');
+  if (!canvas) return;
+  const wrap = canvas.parentElement;
+  const DPR = Math.min(window.devicePixelRatio, 2);
+  function resize() {
+    canvas.width  = wrap.clientWidth  * DPR;
+    canvas.height = wrap.clientHeight * DPR;
+    canvas.style.width  = wrap.clientWidth  + 'px';
+    canvas.style.height = wrap.clientHeight + 'px';
   }
-  frame();
+  resize();
+  const ctx = canvas.getContext('2d');
+  const W = () => canvas.width, H = () => canvas.height;
+  const INK=[43,33,25], STONE=[139,126,116], TERRA=[197,96,42];
+
+  // Fibonacci sphere distribution
+  const PHI = (1 + Math.sqrt(5)) / 2;
+  const N_OUTER=52, N_MID=20, N_INNER=10;
+  const nodes=[];
+
+  for (let i=0;i<N_OUTER;i++){
+    const theta=2*Math.PI*i/PHI, phi=Math.acos(1-2*(i+0.5)/N_OUTER);
+    const oy=Math.cos(phi);
+    nodes.push({ bx:Math.sin(phi)*Math.cos(theta), by:oy, bz:Math.sin(phi)*Math.sin(theta),
+      col: oy>0.35?STONE:oy<-0.35?TERRA:INK, layer:'outer',
+      pulse:Math.random()*Math.PI*2, pulseSpeed:0.5+Math.random()*0.7, baseR:2.5*DPR });
+  }
+  for (let i=0;i<N_MID;i++){
+    const theta=2*Math.PI*i/PHI, phi=Math.acos(1-2*(i+0.5)/N_MID), R=0.62, oy=Math.cos(phi);
+    nodes.push({ bx:R*Math.sin(phi)*Math.cos(theta), by:R*oy, bz:R*Math.sin(phi)*Math.sin(theta),
+      col:INK, layer:'mid', pulse:Math.random()*Math.PI*2, pulseSpeed:0.4+Math.random()*0.5, baseR:2.0*DPR });
+  }
+  for (let i=0;i<N_INNER;i++){
+    const theta=Math.random()*Math.PI*2, phi=Math.acos(2*Math.random()-1), R=0.15+Math.random()*0.2;
+    nodes.push({ bx:R*Math.sin(phi)*Math.cos(theta), by:R*Math.cos(phi), bz:R*Math.sin(phi)*Math.sin(theta),
+      col:TERRA, layer:'inner', pulse:Math.random()*Math.PI*2, pulseSpeed:0.8+Math.random()*0.6, baseR:1.8*DPR });
+  }
+
+  const D2=(a,b)=>(a.bx-b.bx)**2+(a.by-b.by)**2+(a.bz-b.bz)**2;
+  const edges=[];
+  for (let i=0;i<N_OUTER;i++)
+    for (let j=i+1;j<N_OUTER;j++)
+      if(D2(nodes[i],nodes[j])<0.28)
+        edges.push({a:i,b:j,type:'struct'});
+  for (let i=N_OUTER;i<N_OUTER+N_MID;i++){
+    nodes.slice(0,N_OUTER).map((n,j)=>({j,d:D2(nodes[i],n)}))
+      .sort((a,b)=>a.d-b.d).slice(0,2)
+      .forEach(({j})=>edges.push({a:i,b:j,type:'signal',progress:Math.random(),speed:0.004+Math.random()*0.004}));
+  }
+  for (let i=N_OUTER+N_MID;i<nodes.length;i++){
+    nodes.slice(N_OUTER,N_OUTER+N_MID).map((n,j)=>({j:j+N_OUTER,d:D2(nodes[i],n)}))
+      .sort((a,b)=>a.d-b.d).slice(0,2)
+      .forEach(({j})=>edges.push({a:i,b:j,type:'signal',progress:Math.random(),speed:0.006+Math.random()*0.005}));
+  }
+
+  let rotY=0, mx=0, my=0, tmx=0, tmy=0;
+  wrap.addEventListener('mousemove',ev=>{
+    const r=wrap.getBoundingClientRect();
+    tmx=((ev.clientX-r.left)/r.width-0.5)*0.55;
+    tmy=((ev.clientY-r.top)/r.height-0.5)*0.3;
+  });
+
+  function rotVec(x,y,z,ry,rx){
+    let cx=x*Math.cos(ry)+z*Math.sin(ry),cz=-x*Math.sin(ry)+z*Math.cos(ry);
+    return [cx, y*Math.cos(rx)-cz*Math.sin(rx), y*Math.sin(rx)+cz*Math.cos(rx)];
+  }
+  function proj3D(x,y,z){
+    const fov=3.5,s=fov/(fov+z);
+    return {sx:W()*0.5+x*W()*0.32*s, sy:H()*0.5+y*H()*0.34*s, scale:s, rz:z};
+  }
+  function getSphereScale(t){
+    const breath=1+0.06*Math.sin(t*1.1);
+    const cycleT=(t%9)/9;
+    return breath+(cycleT<0.25?Math.sin(cycleT/0.25*Math.PI)*0.22:0);
+  }
+
+  let t=0;
+  function draw(){
+    t+=0.014;
+    ctx.clearRect(0,0,W(),H());
+    mx+=(tmx-mx)*0.035; my+=(tmy-my)*0.035;
+    rotY=t*0.14+mx;
+    const rx=0.22+my, sc=getSphereScale(t);
+
+    const proj=nodes.map(n=>{
+      const [a,b,c]=rotVec(n.bx*sc,n.by*sc,n.bz*sc,rotY,rx);
+      return proj3D(a,b,c);
+    });
+
+    edges.map(e=>({e,midZ:(proj[e.a].rz+proj[e.b].rz)*0.5}))
+      .sort((a,b)=>a.midZ-b.midZ)
+      .forEach(({e})=>{
+        const pa=proj[e.a],pb=proj[e.b];
+        const ea=Math.max(0,(Math.min(pa.scale,pb.scale)-0.45)/0.55)*0.55;
+        if(e.type==='struct'){
+          ctx.beginPath(); ctx.moveTo(pa.sx,pa.sy); ctx.lineTo(pb.sx,pb.sy);
+          ctx.strokeStyle=`rgba(${STONE[0]},${STONE[1]},${STONE[2]},${ea*0.45})`;
+          ctx.lineWidth=0.6*DPR; ctx.stroke();
+        } else {
+          const ca=nodes[e.a].col,cb=nodes[e.b].col;
+          const g=ctx.createLinearGradient(pa.sx,pa.sy,pb.sx,pb.sy);
+          g.addColorStop(0,`rgba(${ca[0]},${ca[1]},${ca[2]},${ea*0.8})`);
+          g.addColorStop(1,`rgba(${cb[0]},${cb[1]},${cb[2]},${ea*0.8})`);
+          ctx.beginPath(); ctx.moveTo(pa.sx,pa.sy); ctx.lineTo(pb.sx,pb.sy);
+          ctx.strokeStyle=g; ctx.lineWidth=0.9*DPR; ctx.stroke();
+          e.progress=(e.progress+e.speed)%1;
+          const px=pa.sx+(pb.sx-pa.sx)*e.progress, py=pa.sy+(pb.sy-pa.sy)*e.progress;
+          const pS=pa.scale+(pb.scale-pa.scale)*e.progress, sr=2.8*Math.max(pS,0.4)*DPR;
+          const grd=ctx.createRadialGradient(px,py,0,px,py,sr*2.5);
+          grd.addColorStop(0,`rgba(${TERRA[0]},${TERRA[1]},${TERRA[2]},${ea*0.9})`);
+          grd.addColorStop(1,`rgba(${TERRA[0]},${TERRA[1]},${TERRA[2]},0)`);
+          ctx.beginPath(); ctx.arc(px,py,sr*2.5,0,Math.PI*2); ctx.fillStyle=grd; ctx.fill();
+          ctx.beginPath(); ctx.arc(px,py,sr,0,Math.PI*2);
+          ctx.fillStyle=`rgba(${TERRA[0]},${TERRA[1]},${TERRA[2]},${ea})`; ctx.fill();
+        }
+      });
+
+    proj.map((p,i)=>({p,n:nodes[i]})).sort((a,b)=>a.p.rz-b.p.rz)
+      .forEach(({p,n})=>{
+        n.pulse+=n.pulseSpeed*0.014;
+        const r=n.baseR*Math.max(p.scale,0.3)*(1+Math.sin(n.pulse)*0.18)*(1+(sc-1)*0.6);
+        const al=0.1+(p.scale-0.3)*0.9; if(al<0.05)return;
+        const [c0,c1,c2]=n.col;
+        const grd=ctx.createRadialGradient(p.sx,p.sy,0,p.sx,p.sy,r*3);
+        grd.addColorStop(0,`rgba(${c0},${c1},${c2},${al*0.18})`);
+        grd.addColorStop(1,`rgba(${c0},${c1},${c2},0)`);
+        ctx.beginPath(); ctx.arc(p.sx,p.sy,r*3,0,Math.PI*2); ctx.fillStyle=grd; ctx.fill();
+        ctx.beginPath(); ctx.arc(p.sx,p.sy,r,0,Math.PI*2);
+        ctx.fillStyle=`rgba(${c0},${c1},${c2},${Math.min(al,0.85)})`; ctx.fill();
+      });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+  new ResizeObserver(()=>resize()).observe(wrap);
 })();
+</script>
+
+<!-- THREE.JS HERO PARTICLE FIELD -->
+<script type="module">
+import * as THREE from 'three';
+
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0xFAF6F0, 1);
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0xFAF6F0, 0.012);
+
+const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.1, 300);
+camera.position.set(55, 16, 42);
+
+const COUNT = 1200;
+const positions = new Float32Array(COUNT * 3);
+const sizes = new Float32Array(COUNT);
+const digits = new Float32Array(COUNT);
+const startPos = new Float32Array(COUNT * 3);
+const waveX = new Float32Array(COUNT);
+
+for (let i = 0; i < COUNT; i++) {
+  const ix = i * 3;
+  startPos[ix] = (Math.random() - 0.5) * 80;
+  startPos[ix + 1] = (Math.random() - 0.5) * 80;
+  startPos[ix + 2] = (Math.random() - 0.5) * 80;
+  positions[ix] = startPos[ix];
+  positions[ix + 1] = startPos[ix + 1];
+  positions[ix + 2] = startPos[ix + 2];
+  sizes[i] = 2.4 + Math.random() * 1.1;
+  digits[i] = Math.random() < 0.5 ? 0 : 1;
+  waveX[i] = -50 + (i / (COUNT - 1)) * 100 + (Math.random() - 0.5) * 1.5;
+}
+
+const geometry = new THREE.BufferGeometry();
+geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+geometry.setAttribute('digit', new THREE.BufferAttribute(digits, 1));
+
+const texCanvas = document.createElement('canvas');
+texCanvas.width = 256;
+texCanvas.height = 128;
+const ctx = texCanvas.getContext('2d');
+ctx.clearRect(0,0,256,128);
+ctx.fillStyle = '#ffffff';
+ctx.textAlign = 'center';
+ctx.textBaseline = 'middle';
+ctx.font = '84px "Fragment Mono", "Courier New", monospace';
+ctx.fillText('0', 64, 72);
+ctx.fillText('1', 192, 72);
+const atlas = new THREE.CanvasTexture(texCanvas);
+atlas.minFilter = THREE.LinearFilter;
+atlas.magFilter = THREE.LinearFilter;
+atlas.generateMipmaps = false;
+
+const uniforms = {
+  map: { value: atlas },
+  fogColor: { value: new THREE.Color(0xFAF6F0) },
+  fogDensity: { value: 0.012 },
+  baseInk: { value: new THREE.Color(0x2B2119) },
+  stone: { value: new THREE.Color(0x8B7E74) },
+  terra: { value: new THREE.Color(0xC5602A) },
+  isWave: { value: 0.0 }
+};
+
+const vertexShader = `
+  attribute float size;
+  attribute float digit;
+  varying float vDigit;
+  varying float vFogDepth;
+  varying vec3 vWorldPos;
+  void main() {
+    vDigit = digit;
+    vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+    vFogDepth = -mvPosition.z;
+    vWorldPos = (modelMatrix * vec4(position, 1.0)).xyz;
+    gl_PointSize = size * (280.0 / max(8.0, vFogDepth));
+    gl_Position = projectionMatrix * mvPosition;
+  }
+`;
+
+const fragmentShader = `
+  uniform sampler2D map;
+  uniform vec3 fogColor;
+  uniform float fogDensity;
+  uniform vec3 baseInk;
+  uniform vec3 stone;
+  uniform vec3 terra;
+  uniform float isWave;
+  varying float vDigit;
+  varying float vFogDepth;
+  varying vec3 vWorldPos;
+  void main() {
+    vec2 uv = gl_PointCoord;
+    uv.x = uv.x * 0.5 + vDigit * 0.5;
+    vec4 tex = texture2D(map, uv);
+    if (tex.a < 0.08) discard;
+    float depthT = smoothstep(25.0, 85.0, vFogDepth);
+    vec3 col = mix(baseInk, stone, depthT * 0.85);
+    if (isWave > 0.001) {
+      float radial = length(vWorldPos.yz);
+      float centerX = 1.0 - smoothstep(0.0, 18.0, abs(vWorldPos.x));
+      float terraMask = (1.0 - smoothstep(0.0, 5.0, radial)) * centerX;
+      col = mix(col, terra, terraMask * isWave * 0.88);
+    }
+    float alpha = tex.a;
+    float depthAlpha = 1.0 - smoothstep(30.0, 110.0, vFogDepth) * 0.55;
+    alpha *= depthAlpha;
+    alpha *= 0.92 + 0.08 * isWave;
+    vec4 finalColor = vec4(col, alpha);
+    float fogFactor = 1.0 - exp(-fogDensity * fogDensity * vFogDepth * vFogDepth);
+    fogFactor = clamp(fogFactor, 0.0, 1.0);
+    finalColor.rgb = mix(finalColor.rgb, fogColor, fogFactor * 0.94);
+    gl_FragColor = finalColor;
+  }
+`;
+
+const material = new THREE.ShaderMaterial({
+  uniforms,
+  vertexShader,
+  fragmentShader,
+  transparent: true,
+  depthWrite: false,
+  blending: THREE.NormalBlending
+});
+
+const points = new THREE.Points(geometry, material);
+scene.add(points);
+scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+
+const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+window.addEventListener('pointermove', (e) => {
+  mouse.tx = (e.clientX / window.innerWidth - 0.5) * 2;
+  mouse.ty = (e.clientY / window.innerHeight - 0.5) * 2;
+}, { passive: true });
+
+const CYCLE = 23.0;
+const T_INIT = 8.0;
+const T_TR1 = 3.0;
+const T_WAVE = 9.0;
+const T_TR2 = 3.0;
+
+function easeInOutCubic(t) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+function newInits() {
+  for (let i = 0; i < COUNT; i++) {
+    const ix = i * 3;
+    startPos[ix] = (Math.random() - 0.5) * 84;
+    startPos[ix + 1] = (Math.random() - 0.5) * 84;
+    startPos[ix + 2] = (Math.random() - 0.5) * 84;
+  }
+}
+
+let startSec = performance.now() / 1000;
+let prevPhase = -1;
+
+function animate() {
+  const now = performance.now() / 1000;
+  const t = now - startSec;
+  const cycleT = t % CYCLE;
+
+  let phase = 0;
+  let waveFactor = 0;
+
+  if (cycleT < T_INIT) {
+    phase = 0; waveFactor = 0;
+  } else if (cycleT < T_INIT + T_TR1) {
+    phase = 1; waveFactor = easeInOutCubic((cycleT - T_INIT) / T_TR1);
+  } else if (cycleT < T_INIT + T_TR1 + T_WAVE) {
+    phase = 2; waveFactor = 1;
+  } else {
+    phase = 3; waveFactor = 1 - easeInOutCubic((cycleT - T_INIT - T_TR1 - T_WAVE) / T_TR2);
+  }
+
+  if (phase === 3 && prevPhase !== 3) { newInits(); }
+  prevPhase = phase;
+  uniforms.isWave.value = waveFactor;
+
+  const pos = geometry.attributes.position.array;
+  const time = t;
+
+  for (let i = 0; i < COUNT; i++) {
+    const ix = i * 3;
+    const sx = startPos[ix];
+    const sy = startPos[ix + 1];
+    const sz = startPos[ix + 2];
+    const ix0 = sx + Math.sin(time * 0.23 + i * 0.71) * 0.7;
+    const iy0 = sy + Math.cos(time * 0.19 + i * 1.13) * 0.7;
+    const iz0 = sz + Math.sin(time * 0.17 + i * 0.91) * 0.6;
+    const bx = waveX[i];
+    const flow = ((bx + time * 7.2) % 100 + 100) % 100 - 50;
+    const wx = flow;
+    const wy = Math.sin(wx * 0.18 + time * 0.8) * 8.0;
+    const wz = Math.cos(wx * 0.12 + time * 0.5) * 5.0;
+    const ang = i * 0.618 + time * 1.15;
+    const r = 1.6;
+    const wy2 = wy + Math.cos(ang) * r * 0.75;
+    const wz2 = wz + Math.sin(ang) * r * 0.65;
+    const wx2 = wx + Math.sin(i * 0.27) * 0.25;
+    const mix = waveFactor;
+    pos[ix]     = ix0 + (wx2 - ix0) * mix;
+    pos[ix + 1] = iy0 + (wy2 - iy0) * mix;
+    pos[ix + 2] = iz0 + (wz2 - iz0) * mix;
+  }
+  geometry.attributes.position.needsUpdate = true;
+
+  mouse.x += (mouse.tx - mouse.x) * 0.03;
+  mouse.y += (mouse.ty - mouse.y) * 0.03;
+
+  const orbitAngle = time * 0.03;
+  const radius = 68;
+  const baseX = Math.cos(orbitAngle) * radius;
+  const baseZ = Math.sin(orbitAngle) * radius;
+  const baseY = 16 + Math.sin(orbitAngle * 0.5) * 1.8;
+  const targetX = baseX + mouse.x * 4.5;
+  const targetY = baseY - mouse.y * 2.2;
+  const targetZ = baseZ + mouse.x * -1.5;
+
+  camera.position.lerp(new THREE.Vector3(targetX, targetY, targetZ), 0.02);
+  camera.lookAt(0, 0, 0);
+
+  renderer.render(scene, camera);
+  requestAnimationFrame(animate);
+}
+
+function onResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+window.addEventListener('resize', onResize);
+
+animate();
 </script>
 </body>
 </html>
